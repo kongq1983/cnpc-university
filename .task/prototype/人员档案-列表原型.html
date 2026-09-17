@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>人员档案 - 餐饮服务管理平台</title>
+<style>
+  :root{
+    --bg-page:#eef2f8;
+    --surface:#ffffff;
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+    --primary-subtle:#eff6ff;
+    --primary-tint-strong:#dbeafe;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --text-primary:#1e293b;
+    --text-secondary:#64748b;
+    --text-muted:#94a3b8;
+    --border-control:#e2e8f0;
+    --border-container:#e8eef6;
+    --border-row:#f1f5f9;
+    --table-header:#f8fafc;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-page);
+    color:var(--text-primary);
+    font-family:"Noto Sans SC","Inter",-apple-system,"Segoe UI",sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+
+  /* ---------- Header 52px ---------- */
+  .header{
+    height:52px;background:var(--surface);border-bottom:1px solid var(--border-control);
+    display:flex;align-items:center;gap:16px;padding:0 16px;
+  }
+  .header .menu-btn{
+    width:28px;height:28px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    border:0;background:transparent;border-radius:6px;color:var(--text-secondary);cursor:pointer;
+  }
+  .header .menu-btn:hover{background:var(--table-header);}
+  .brand{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .brand .logo{
+    width:24px;height:24px;border-radius:6px;background:var(--primary);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .brand .name{font-size:14px;font-weight:600;white-space:nowrap;}
+  .primary-nav{display:flex;align-items:center;gap:8px;margin-left:8px;}
+  .primary-nav a{
+    height:32px;display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;
+    font-size:14px;color:var(--text-primary);text-decoration:none;white-space:nowrap;
+  }
+  .primary-nav a:hover{background:var(--table-header);}
+  .primary-nav a.active{background:var(--primary-subtle);color:var(--primary);font-weight:500;}
+  .header .spacer{flex:1;}
+  .platform-search{
+    height:32px;width:240px;display:flex;align-items:center;gap:8px;padding:0 10px;
+    background:var(--table-header);border:1px solid transparent;border-radius:8px;color:var(--text-muted);
+  }
+  .platform-search input{
+    border:0;background:transparent;outline:none;width:100%;font-size:14px;
+    font-family:inherit;color:var(--text-primary);
+  }
+  .platform-search input::placeholder{color:var(--text-muted);}
+  .icon-btn{
+    width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+    border:0;background:transparent;border-radius:6px;color:var(--text-secondary);cursor:pointer;position:relative;
+  }
+  .icon-btn:hover{background:var(--table-header);}
+  .icon-btn .dot{
+    position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;
+    background:var(--danger);border:1px solid var(--surface);
+  }
+  .account{
+    width:28px;height:28px;border-radius:50%;background:var(--table-header);border:1px solid var(--border-control);
+    display:flex;align-items:center;justify-content:center;color:var(--text-secondary);cursor:pointer;
+  }
+
+  /* ---------- Secondary Navigation 42px ---------- */
+  .sub-nav{
+    height:42px;background:var(--surface);border-bottom:1px solid var(--border-control);
+    display:flex;align-items:stretch;gap:24px;padding:0 24px;
+  }
+  .sub-nav a{
+    display:inline-flex;align-items:center;font-size:14px;color:var(--text-primary);
+    text-decoration:none;border-bottom:2px solid transparent;
+  }
+  .sub-nav a:hover{color:var(--primary);}
+  .sub-nav a.active{color:var(--primary);font-weight:500;border-bottom-color:var(--primary);}
+
+  /* ---------- Content Area ---------- */
+  .content{padding:20px;}
+  .section + .section{margin-top:20px;}
+
+  /* KPI 概览：KPI Card 10px / Padding 16px 20px / 无阴影 / 标准 KPI 24px 700 */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .kpi-card{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:10px;
+    padding:16px 20px;display:flex;align-items:center;gap:12px;
+  }
+  .kpi-icon{
+    width:40px;height:40px;flex:0 0 40px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .kpi-icon.blue{background:var(--primary-subtle);color:var(--primary);}
+  .kpi-icon.green{background:#ecfdf5;color:var(--success);}
+  .kpi-icon.amber{background:#fffbeb;color:#b45309;}
+  .kpi-icon.red{background:#fef2f2;color:var(--danger);}
+  .kpi-body{min-width:0;}
+  .kpi-label{font-size:12px;color:var(--text-secondary);}
+  .kpi-value{font-size:24px;font-weight:700;line-height:1.25;color:var(--text-primary);font-variant-numeric:tabular-nums;}
+  .kpi-sub{font-size:12px;color:var(--text-muted);}
+
+  /* 筛选区：管理 Card 10px / Padding 16px 20px */
+  .card-filter{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:10px;
+    padding:16px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;
+  }
+  .field{display:flex;align-items:center;gap:8px;}
+  .field label{font-size:12px;color:var(--text-secondary);white-space:nowrap;}
+  .input,.select{
+    height:32px;border:1px solid var(--border-control);border-radius:6px;background:var(--surface);
+    font-size:13px;color:var(--text-primary);font-family:inherit;
+  }
+  .input{padding:0 10px;width:180px;}
+  .select{padding:0 8px;min-width:120px;}
+  .input:focus,.select:focus{outline:none;border-color:#60a5fa;}
+  .filter-actions{display:flex;align-items:center;gap:12px;margin-left:auto;}
+
+  /* Button 规范 */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;border-radius:6px;
+    font-family:inherit;cursor:pointer;white-space:nowrap;text-decoration:none;
+  }
+  .btn-primary-filter{height:32px;padding:0 16px;font-size:13px;border:1px solid var(--primary);background:var(--primary);color:#fff;}
+  .btn-primary-filter:hover{background:var(--primary-hover);border-color:var(--primary-hover);}
+  .btn-secondary-filter{height:32px;padding:0 16px;font-size:13px;border:1px solid var(--border-control);background:var(--surface);color:var(--text-primary);}
+  .btn-secondary-filter:hover{background:var(--table-header);}
+  .btn-secondary-toolbar{height:30px;padding:0 14px;font-size:12px;border:1px solid var(--border-control);background:var(--surface);color:var(--text-primary);}
+  .btn-secondary-toolbar:hover{background:var(--table-header);}
+
+  /* 操作栏 */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+  .toolbar .meta{font-size:12px;color:var(--text-muted);}
+
+  /* Management Table */
+  .card-table{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:10px;overflow:auto;
+  }
+
+  /* 出入记录台账：一级展示 Card 12px / Padding 20px */
+  .card-ledger{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:12px;padding:20px;
+  }
+  .ledger-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px;
+  }
+  .ledger-title{font-size:16px;font-weight:700;color:var(--text-primary);}
+  .ledger-tools{display:flex;align-items:center;gap:12px;}
+  .search-field{
+    height:32px;width:260px;display:flex;align-items:center;gap:8px;padding:0 10px;
+    border:1px solid var(--border-control);border-radius:6px;background:var(--surface);color:var(--text-muted);
+  }
+  .search-field input{
+    border:0;background:transparent;outline:none;width:100%;font-size:13px;
+    font-family:inherit;color:var(--text-primary);
+  }
+  .search-field input::placeholder{color:var(--text-muted);}
+  /* 子 Card 8px */
+  .ledger-table{
+    border:1px solid var(--border-container);border-radius:8px;overflow:auto;
+  }
+  .ledger-note{
+    margin-top:16px;padding:10px 14px;background:var(--primary-subtle);border-radius:8px;
+    display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-secondary);
+  }
+  .ledger-note .ico{flex:0 0 auto;color:var(--primary);}
+  .cell-main{font-size:13px;color:var(--text-primary);}
+  .cell-sub{font-size:12px;color:var(--text-muted);margin-top:2px;}
+  .tag-in{background:#ecfdf5;color:var(--success);}
+  .tag-out{background:#f1f5f9;color:var(--text-secondary);}
+  .tag-unit{background:var(--primary-subtle);color:var(--primary);}
+  .tag-green{background:#ecfdf5;color:var(--success);}
+  .tag-blue{background:var(--primary-subtle);color:var(--primary);}
+  .tag-gray{background:#f1f5f9;color:var(--text-secondary);}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{
+    background:var(--table-header);color:var(--text-secondary);font-weight:500;font-size:13px;
+    text-align:left;padding:10px 14px;white-space:nowrap;border-bottom:1px solid var(--border-row);
+  }
+  tbody td{padding:10px 14px;border-bottom:1px solid var(--border-row);color:var(--text-primary);}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr:hover{background:var(--table-header);}
+  td.num{font-variant-numeric:tabular-nums;}
+  td.blank{color:var(--text-muted);}
+  .row-actions{display:flex;align-items:center;gap:12px;}
+  .link-action{
+    border:0;background:transparent;padding:0;font-size:12px;color:var(--primary);cursor:pointer;
+    font-family:inherit;text-decoration:none;
+  }
+  .link-action:hover{color:var(--primary-hover);text-decoration:underline;}
+
+  /* Status Tag 11–12px / 4px / 2px 8px */
+  .tag{
+    display:inline-block;font-size:12px;line-height:16px;padding:2px 8px;border-radius:4px;white-space:nowrap;
+  }
+  .tag-normal{background:#ecfdf5;color:var(--success);}
+  .tag-soon{background:#fffbeb;color:#b45309;}
+  .tag-expired{background:#fef2f2;color:var(--danger);}
+  .tag-active{background:#ecfdf5;color:var(--success);}
+  .tag-left{background:#f1f5f9;color:var(--text-secondary);}
+
+  /* 到期日文字色与健康证状态一致 */
+  .text-normal{color:var(--success);}
+  .text-soon{color:#b45309;}
+  .text-expired{color:var(--danger);}
+
+  /* Pagination 28×28 / 5px */
+  .pagination{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;
+  }
+  .pagination .total{font-size:12px;color:var(--text-secondary);}
+  .pages{display:flex;align-items:center;gap:8px;}
+  .page-item{
+    min-width:28px;height:28px;padding:0 6px;border-radius:5px;border:1px solid var(--border-control);
+    background:var(--surface);color:var(--text-primary);font-size:13px;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;font-family:inherit;
+  }
+  .page-item:hover{background:var(--table-header);}
+  .page-item.active{background:var(--primary);border-color:var(--primary);color:#fff;}
+  .page-item:disabled{color:var(--text-muted);cursor:not-allowed;background:var(--surface);}
+
+  /* Footer */
+  .footer{
+    background:var(--surface);border-top:1px solid var(--border-control);
+    padding:14px 20px;text-align:center;font-size:12px;color:var(--text-muted);margin-top:20px;
+  }
+
+  /* 查看弹窗：沿用现有颜色、字体、间距与组件，圆角取管理容器档 10px */
+  .modal-mask{
+    position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;
+    align-items:flex-start;justify-content:center;padding:80px 20px 40px;z-index:50;
+  }
+  .modal-mask.open{display:flex;}
+  .modal{
+    width:760px;max-width:100%;background:var(--surface);border:1px solid var(--border-container);
+    border-radius:10px;padding:20px;box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .modal-head h2{margin:0;font-size:16px;font-weight:700;color:var(--text-primary);}
+  .modal-close{
+    width:28px;height:28px;border:0;background:transparent;border-radius:6px;color:var(--text-secondary);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .modal-close:hover{background:var(--table-header);}
+  .modal-body{display:flex;gap:20px;}
+  .modal-main{flex:1;min-width:0;}
+  .modal-media{flex:0 0 200px;display:flex;flex-direction:column;gap:12px;}
+  .modal-section{font-size:14px;font-weight:600;color:var(--text-primary);margin:0 0 12px;}
+  .modal-main .modal-section:not(:first-child){margin-top:20px;}
+  .media-item .k{font-size:12px;color:var(--text-secondary);margin-bottom:4px;}
+  .photo{
+    border:1px solid var(--border-control);border-radius:6px;background:var(--table-header);
+    display:flex;align-items:center;justify-content:center;color:var(--text-muted);
+  }
+  .photo-face{width:96px;height:128px;}
+  .photo-cert{width:200px;height:126px;}
+  .photo .photo-hint{font-size:11px;}
+  .photo.is-empty .photo-hint{display:none;}
+  .modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  .modal-item{border-bottom:1px solid var(--border-row);padding-bottom:8px;}
+  .modal-item .k{font-size:12px;color:var(--text-secondary);margin-bottom:4px;}
+  .modal-item .v{font-size:13px;color:var(--text-primary);min-height:20px;}
+  .modal-foot{display:flex;justify-content:flex-end;gap:12px;margin-top:20px;}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <button class="menu-btn" aria-label="菜单">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  </button>
+  <div class="brand">
+    <span class="logo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3v8a3 3 0 0 0 6 0V3"/><path d="M8 11v10"/><path d="M17 3c-1.5 2-2 3.5-2 5.5S16 12 17 13v8"/>
+      </svg>
+    </span>
+    <span class="name">餐饮服务管理平台</span>
+  </div>
+  <nav class="primary-nav">
+    <a href="#">工作台</a>
+    <a href="#" class="active">人员合规</a>
+    <a href="#">在岗编制</a>
+    <a href="#">管理驾驶舱</a>
+  </nav>
+  <span class="spacer"></span>
+  <div class="platform-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>
+    </svg>
+    <input type="text" placeholder="搜索">
+  </div>
+  <button class="icon-btn" aria-label="消息">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.5 20a2 2 0 0 0 3 0"/>
+    </svg>
+    <span class="dot"></span>
+  </button>
+  <div class="account" aria-label="账号">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+    </svg>
+  </div>
+</header>
+
+<!-- Secondary Navigation -->
+<nav class="sub-nav">
+  <a href="#" class="active">人员档案</a>
+  <a href="#">在岗情况</a>
+</nav>
+
+<main class="content">
+
+  <!-- 概览指标 -->
+  <section class="section">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">人员总数</div>
+          <div class="kpi-value">16</div>
+          <div class="kpi-sub">全校 4 食堂</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="8"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">在职</div>
+          <div class="kpi-value">14</div>
+          <div class="kpi-sub">4 家食堂在编</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20s-6.5-3.6-6.5-8.4A3.9 3.9 0 0 1 12 9.1a3.9 3.9 0 0 1 6.5 2.5c0 4.8-6.5 8.4-6.5 8.4z"/><path d="M8.4 13.2h2l1.2-1.8 1.2 3 1.2-1.2h1.6"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">健康证临期</div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-sub">≤30 天到期</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon red">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4h-4"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">健康证已过期</div>
+          <div class="kpi-value">0</div>
+          <div class="kpi-sub">需立即换证</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 筛选区 -->
+  <section class="section">
+    <div class="card-filter">
+      <div class="field">
+        <label for="f-name">姓名</label>
+        <input id="f-name" class="input" type="text" placeholder="请输入姓名">
+      </div>
+      <div class="field">
+        <label for="f-gender">性别</label>
+        <select id="f-gender" class="select">
+          <option>全部</option><option>男</option><option>女</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-cert">健康证</label>
+        <select id="f-cert" class="select">
+          <option>全部</option><option>即将到期</option><option>已过期</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-status">在职状态</label>
+        <select id="f-status" class="select">
+          <option>全部</option><option>在职</option><option>离职</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary-filter" type="button">查询</button>
+        <button class="btn btn-secondary-filter" type="button">重置</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 操作栏 -->
+  <section class="section">
+    <div class="toolbar">
+      <span class="meta">数据为原型占位示例</span>
+      <button class="btn btn-secondary-toolbar" type="button">导出</button>
+    </div>
+
+    <!-- Management Table -->
+    <div class="card-table">
+      <table>
+        <thead>
+          <tr>
+            <th>姓名</th>
+            <th>工号</th>
+            <th>性别</th>
+            <th>岗位</th>
+            <th>餐饮单位</th>
+            <th>联系电话</th>
+            <th>在职状态</th>
+            <th>健康证编号</th>
+            <th>到期日</th>
+            <th>健康证状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <!-- 排序：无健康证记录（到期日为空）在前；其余按到期日升序 -->
+        <tbody>
+          <tr data-name="王海涛" data-no="20210318" data-gender="男" data-post="厨师长" data-phone="13810212210" data-unit="南苑" data-emp="在职"
+              data-cert="" data-expire="" data-cert-state="" data-issuer="">
+            <td>王海涛</td>
+            <td class="num">20210318</td>
+            <td>男</td>
+            <td>厨师长</td>
+            <td>南苑</td>
+            <td class="num">13810212210</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="赵敏" data-no="20190722" data-gender="女" data-post="服务员" data-phone="13911337703" data-unit="西区" data-emp="离职"
+              data-cert="" data-expire="" data-cert-state="" data-issuer="">
+            <td>赵敏</td>
+            <td class="num">20190722</td>
+            <td>女</td>
+            <td>服务员</td>
+            <td>西区</td>
+            <td class="num">13911337703</td>
+            <td><span class="tag tag-left">离职</span></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="郑小燕" data-no="20240115" data-gender="女" data-post="收银员" data-phone="13655120088" data-unit="博雅" data-emp="在职"
+              data-cert="" data-expire="" data-cert-state="" data-issuer="">
+            <td>郑小燕</td>
+            <td class="num">20240115</td>
+            <td>女</td>
+            <td>收银员</td>
+            <td>博雅</td>
+            <td class="num">13655120088</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td class="blank"></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="李国强" data-no="20200215" data-gender="男" data-post="厨师" data-phone="13712445568" data-unit="知味" data-emp="在职"
+              data-cert="JKZ-2025-008912" data-expire="2026-09-25" data-cert-state="即将到期" data-issuer="市疾病预防控制中心">
+            <td>李国强</td>
+            <td class="num">20200215</td>
+            <td>男</td>
+            <td>厨师</td>
+            <td>知味</td>
+            <td class="num">13712445568</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2025-008912</td>
+            <td class="num text-soon">2026-09-25</td>
+            <td><span class="tag tag-soon">即将到期</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="陈晓峰" data-no="20220801" data-gender="男" data-post="面点师" data-phone="13698889012" data-unit="南苑" data-emp="在职"
+              data-cert="JKZ-2025-010433" data-expire="2026-10-02" data-cert-state="即将到期" data-issuer="市疾病预防控制中心">
+            <td>陈晓峰</td>
+            <td class="num">20220801</td>
+            <td>男</td>
+            <td>面点师</td>
+            <td>南苑</td>
+            <td class="num">13698889012</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2025-010433</td>
+            <td class="num text-soon">2026-10-02</td>
+            <td><span class="tag tag-soon">即将到期</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="孙丽华" data-no="20230606" data-gender="女" data-post="配菜员" data-phone="13522333345" data-unit="南苑" data-emp="在职"
+              data-cert="JKZ-2025-011877" data-expire="2026-10-09" data-cert-state="即将到期" data-issuer="区疾病预防控制中心">
+            <td>孙丽华</td>
+            <td class="num">20230606</td>
+            <td>女</td>
+            <td>配菜员</td>
+            <td>南苑</td>
+            <td class="num">13522333345</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2025-011877</td>
+            <td class="num text-soon">2026-10-09</td>
+            <td><span class="tag tag-soon">即将到期</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="周文静" data-no="20210227" data-gender="女" data-post="洗碗工" data-phone="13366118821" data-unit="知味" data-emp="在职"
+              data-cert="JKZ-2025-012045" data-expire="2026-10-16" data-cert-state="即将到期" data-issuer="区疾病预防控制中心">
+            <td>周文静</td>
+            <td class="num">20210227</td>
+            <td>女</td>
+            <td>洗碗工</td>
+            <td>知味</td>
+            <td class="num">13366118821</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2025-012045</td>
+            <td class="num text-soon">2026-10-16</td>
+            <td><span class="tag tag-soon">即将到期</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="刘建国" data-no="20180409" data-gender="男" data-post="库管员" data-phone="13212346677" data-unit="知味" data-emp="在职"
+              data-cert="JKZ-2026-001338" data-expire="2026-11-20" data-cert-state="正常" data-issuer="市疾病预防控制中心">
+            <td>刘建国</td>
+            <td class="num">20180409</td>
+            <td>男</td>
+            <td>库管员</td>
+            <td>知味</td>
+            <td class="num">13212346677</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-001338</td>
+            <td class="num text-normal">2026-11-20</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="吴秀英" data-no="20200914" data-gender="女" data-post="保洁员" data-phone="13155664490" data-unit="西区" data-emp="在职"
+              data-cert="JKZ-2026-002761" data-expire="2026-12-05" data-cert-state="正常" data-issuer="区疾病预防控制中心">
+            <td>吴秀英</td>
+            <td class="num">20200914</td>
+            <td>女</td>
+            <td>保洁员</td>
+            <td>西区</td>
+            <td class="num">13155664490</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-002761</td>
+            <td class="num text-normal">2026-12-05</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="马长海" data-no="20170621" data-gender="男" data-post="厨师" data-phone="13088127734" data-unit="西区" data-emp="在职"
+              data-cert="JKZ-2026-003102" data-expire="2027-01-15" data-cert-state="正常" data-issuer="市疾病预防控制中心">
+            <td>马长海</td>
+            <td class="num">20170621</td>
+            <td>男</td>
+            <td>厨师</td>
+            <td>西区</td>
+            <td class="num">13088127734</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-003102</td>
+            <td class="num text-normal">2027-01-15</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="高文娟" data-no="20220308" data-gender="女" data-post="服务员" data-phone="13877441206" data-unit="南苑" data-emp="在职"
+              data-cert="JKZ-2026-003455" data-expire="2027-02-10" data-cert-state="正常" data-issuer="区疾病预防控制中心">
+            <td>高文娟</td>
+            <td class="num">20220308</td>
+            <td>女</td>
+            <td>服务员</td>
+            <td>南苑</td>
+            <td class="num">13877441206</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-003455</td>
+            <td class="num text-normal">2027-02-10</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="宋建军" data-no="20190517" data-gender="男" data-post="保安" data-phone="13922998765" data-unit="博雅" data-emp="在职"
+              data-cert="JKZ-2026-003788" data-expire="2027-03-08" data-cert-state="正常" data-issuer="市疾病预防控制中心">
+            <td>宋建军</td>
+            <td class="num">20190517</td>
+            <td>男</td>
+            <td>保安</td>
+            <td>博雅</td>
+            <td class="num">13922998765</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-003788</td>
+            <td class="num text-normal">2027-03-08</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="田玉兰" data-no="20211025" data-gender="女" data-post="面点师" data-phone="13566223118" data-unit="博雅" data-emp="在职"
+              data-cert="JKZ-2026-004021" data-expire="2027-04-22" data-cert-state="正常" data-issuer="区疾病预防控制中心">
+            <td>田玉兰</td>
+            <td class="num">20211025</td>
+            <td>女</td>
+            <td>面点师</td>
+            <td>博雅</td>
+            <td class="num">13566223118</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-004021</td>
+            <td class="num text-normal">2027-04-22</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="徐立成" data-no="20160309" data-gender="男" data-post="厨师长" data-phone="13733889021" data-unit="知味" data-emp="在职"
+              data-cert="JKZ-2026-004366" data-expire="2027-05-30" data-cert-state="正常" data-issuer="市疾病预防控制中心">
+            <td>徐立成</td>
+            <td class="num">20160309</td>
+            <td>男</td>
+            <td>厨师长</td>
+            <td>知味</td>
+            <td class="num">13733889021</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-004366</td>
+            <td class="num text-normal">2027-05-30</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="谢慧敏" data-no="20230512" data-gender="女" data-post="库管员" data-phone="13244556677" data-unit="西区" data-emp="在职"
+              data-cert="JKZ-2026-004712" data-expire="2027-07-11" data-cert-state="正常" data-issuer="区疾病预防控制中心">
+            <td>谢慧敏</td>
+            <td class="num">20230512</td>
+            <td>女</td>
+            <td>库管员</td>
+            <td>西区</td>
+            <td class="num">13244556677</td>
+            <td><span class="tag tag-active">在职</span></td>
+            <td class="num">JKZ-2026-004712</td>
+            <td class="num text-normal">2027-07-11</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-name="谭志强" data-no="20181203" data-gender="男" data-post="保洁员" data-phone="13388991234" data-unit="博雅" data-emp="离职"
+              data-cert="JKZ-2026-005088" data-expire="2027-08-19" data-cert-state="正常" data-issuer="市疾病预防控制中心">
+            <td>谭志强</td>
+            <td class="num">20181203</td>
+            <td>男</td>
+            <td>保洁员</td>
+            <td>博雅</td>
+            <td class="num">13388991234</td>
+            <td><span class="tag tag-left">离职</span></td>
+            <td class="num">JKZ-2026-005088</td>
+            <td class="num text-normal">2027-08-19</td>
+            <td><span class="tag tag-normal">正常</span></td>
+            <td>
+              <div class="row-actions">
+                <button class="link-action" type="button" data-action="view">查看</button>
+                <a class="link-action" href="#jump-to-other-system" data-action="edit">编辑</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination 28×28 -->
+    <div class="pagination">
+      <span class="total">共 16 条</span>
+      <div class="pages">
+        <button class="page-item" type="button" disabled>上一页</button>
+        <button class="page-item active" type="button">1</button>
+        <button class="page-item" type="button" disabled>下一页</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 出入记录台账 -->
+  <section class="section">
+    <div class="card-ledger">
+      <div class="ledger-head">
+        <div class="ledger-title">出入记录</div>
+        <div class="ledger-tools">
+          <div class="search-field">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>
+            </svg>
+            <input type="text" placeholder="搜索姓名/身份/备注…">
+          </div>
+        </div>
+      </div>
+
+      <div class="ledger-table">
+        <table>
+          <thead>
+            <tr>
+              <th>食堂</th>
+              <th>类型</th>
+              <th>姓名</th>
+              <th>身份</th>
+              <th>时间</th>
+              <th>备注</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td><span class="tag tag-in">员工进入</span></td>
+              <td>陈志远</td>
+              <td>食堂经理</td>
+              <td class="num">2026-09-17 08:20</td>
+              <td>晨检签到 · 刷卡进入</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td><span class="tag tag-in">员工进入</span></td>
+              <td>刘师傅</td>
+              <td>厨师长</td>
+              <td class="num">2026-09-17 09:27</td>
+              <td>刷卡进入 · 后厨</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">知味</span></td>
+              <td><span class="tag tag-in">员工进入</span></td>
+              <td>王知味</td>
+              <td>食堂经理</td>
+              <td class="num">2026-09-17 12:48</td>
+              <td>刷卡进入</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">西区</span></td>
+              <td><span class="tag tag-out">员工离开</span></td>
+              <td>何师傅</td>
+              <td>热菜厨师</td>
+              <td class="num">2026-09-16 13:55</td>
+              <td>下班打卡离场</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 库房出入台账 -->
+  <section class="section">
+    <div class="card-ledger">
+      <div class="ledger-head">
+        <div class="ledger-title">库房出入台账</div>
+        <div class="ledger-tools">
+          <div class="search-field">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>
+            </svg>
+            <input type="text" placeholder="搜索原料/类型/操作人…">
+          </div>
+        </div>
+      </div>
+
+      <div class="ledger-table">
+        <table>
+          <thead>
+            <tr>
+              <th>食堂</th>
+              <th>单据</th>
+              <th>类型</th>
+              <th>库存变动</th>
+              <th>操作人</th>
+              <th>时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">鲜鸡蛋</div>
+                <div class="cell-sub">6kg · 明日早餐档口预领备料（临时登记，次日做账）</div>
+              </td>
+              <td><span class="tag tag-green">预领</span></td>
+              <td class="num">57 → 57kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-17 16:30</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">鲜鸡蛋</div>
+                <div class="cell-sub">8kg · 早餐档口取料出库</div>
+              </td>
+              <td><span class="tag tag-blue">出库</span></td>
+              <td class="num">57 → 49kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-17 10:29</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">土豆</div>
+                <div class="cell-sub">12kg · 午间热菜备餐领用（BOM 按单扣减）</div>
+              </td>
+              <td><span class="tag tag-gray">领用</span></td>
+              <td class="num">128 → 116kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-17 09:20</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">鸡胸肉</div>
+                <div class="cell-sub">10kg · 明日轻食档口预领备料（临时登记，次日做账）</div>
+              </td>
+              <td><span class="tag tag-green">预领</span></td>
+              <td class="num">36.3 → 36.3kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-16 16:30</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">鸡胸肉</div>
+                <div class="cell-sub">6kg · 轻食档口领用</div>
+              </td>
+              <td><span class="tag tag-gray">领用</span></td>
+              <td class="num">36.3 → 30.3kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-16 13:56</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">牛腩</div>
+                <div class="cell-sub">5kg → 西区 · 西区冷库余量调剂至南苑</div>
+              </td>
+              <td><span class="tag tag-blue">调拨</span></td>
+              <td class="num">23.3 → 18.3kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-16 11:38</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-unit">南苑</span></td>
+              <td>
+                <div class="cell-main">土豆</div>
+                <div class="cell-sub">1.5kg · 月末盘点：称重差异 -1.5kg（水分蒸发）</div>
+              </td>
+              <td><span class="tag tag-green">盘点</span></td>
+              <td class="num">128 → 126.5kg</td>
+              <td>陈库管</td>
+              <td class="num">2026-09-15 12:47</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="ledger-note">
+        <svg class="ico" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="8"/><path d="M12 11v5"/><path d="M12 8.2v.1"/>
+        </svg>
+        全校库房出入台账（出库/领用/调拨/盘点）实时同源；出库/领用联动原料库存扣减，盘点按实盘校正，低库存项提示补货，全程审计留痕
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">餐饮服务管理平台 · 人员档案原型</footer>
+
+<!-- 查看弹窗 -->
+<div class="modal-mask" id="viewModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <h2 id="modalTitle">人员档案</h2>
+      <button class="modal-close" type="button" data-action="close" aria-label="关闭">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-main">
+        <h3 class="modal-section">基础信息</h3>
+        <div class="modal-grid">
+          <div class="modal-item"><div class="k">姓名</div><div class="v" data-field="name"></div></div>
+          <div class="modal-item"><div class="k">工号</div><div class="v" data-field="no"></div></div>
+          <div class="modal-item"><div class="k">性别</div><div class="v" data-field="gender"></div></div>
+          <div class="modal-item"><div class="k">岗位</div><div class="v" data-field="post"></div></div>
+          <div class="modal-item"><div class="k">餐饮单位</div><div class="v" data-field="unit"></div></div>
+          <div class="modal-item"><div class="k">联系电话</div><div class="v" data-field="phone"></div></div>
+          <div class="modal-item"><div class="k">在职状态</div><div class="v" data-field="emp"></div></div>
+        </div>
+        <h3 class="modal-section">健康证信息</h3>
+        <div class="modal-grid">
+          <div class="modal-item"><div class="k">健康证编号</div><div class="v" data-field="cert"></div></div>
+          <div class="modal-item"><div class="k">健康证状态</div><div class="v" data-field="certState"></div></div>
+          <div class="modal-item"><div class="k">健康证有效期至</div><div class="v" data-field="expire"></div></div>
+          <div class="modal-item"><div class="k">发证机构</div><div class="v" data-field="issuer"></div></div>
+        </div>
+      </div>
+      <aside class="modal-media">
+        <div class="media-item">
+          <div class="k">人脸照片</div>
+          <div class="photo photo-face"><span class="photo-hint">影像占位</span></div>
+        </div>
+        <div class="media-item">
+          <div class="k">健康证照片</div>
+          <div class="photo photo-cert" id="certPhoto"><span class="photo-hint">影像占位</span></div>
+        </div>
+      </aside>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-secondary-filter" type="button" data-action="close">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var modal = document.getElementById('viewModal');
+    var fields = modal.querySelectorAll('[data-field]');
+
+    var stateColor = {'正常':'text-normal','即将到期':'text-soon','已过期':'text-expired'};
+
+    function fill(row){
+      var map = {
+        name: row.dataset.name,
+        no: row.dataset.no,
+        gender: row.dataset.gender,
+        post: row.dataset.post,
+        unit: row.dataset.unit,
+        phone: row.dataset.phone,
+        emp: row.dataset.emp,
+        cert: row.dataset.cert,
+        expire: row.dataset.expire,
+        certState: row.dataset.certState,
+        issuer: row.dataset.issuer
+      };
+      fields.forEach(function(el){
+        el.textContent = map[el.dataset.field] || '';
+        // 健康证有效期至、健康证状态的文字色与状态一致
+        if (el.dataset.field === 'expire' || el.dataset.field === 'certState'){
+          el.className = 'v ' + (stateColor[row.dataset.certState] || '');
+        }
+      });
+      // 无健康证记录时，健康证照片留空
+      modal.querySelector('#certPhoto').classList.toggle('is-empty', !row.dataset.cert);
+      modal.querySelector('#modalTitle').textContent = row.dataset.name + ' · 人员档案';
+    }
+
+    document.addEventListener('click', function(e){
+      var viewBtn = e.target.closest('[data-action="view"]');
+      if (viewBtn){
+        fill(viewBtn.closest('tr'));
+        modal.classList.add('open');
+        return;
+      }
+      var editLink = e.target.closest('[data-action="edit"]');
+      if (editLink){
+        // 跳转到对方系统编辑页：地址与参数由对方系统提供（待确认清单第 7 项）
+        return;
+      }
+      if (e.target.closest('[data-action="close"]') || e.target === modal){
+        modal.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ modal.classList.remove('open'); }
+    });
+  })();
+</script>
+</body>
+</html>

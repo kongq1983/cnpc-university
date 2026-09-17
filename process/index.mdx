@@ -1,0 +1,47 @@
+---
+title: 冲刺研发流程总览
+sidebar_label: 流程总览
+slug: /
+sidebar_position: 0
+description: 五阶段、十环节的 AI 研发冲刺流程总览，包含 DevOps 记录与技能映射。
+---
+
+import MermaidDiagram from '@site/src/components/MermaidDiagram';
+import ContentGuide from '@site/src/components/ContentGuide';
+
+# 冲刺研发流程总览
+
+<MermaidDiagram
+  chart={`block-beta
+    columns 5
+    P1["冲刺计划"] P2["需求梳理"] P3["编码开发"] P4["测试验收"] P5["冲刺回顾"]
+    E1["用户故事地图讨论会"] space:4
+    E2["用户故事地图评审"] space:4
+    E3["冲刺计划"] space:4
+    space E4["讨论并生成 Feature 文件"] space:3
+    space E5["Feature 文件评审"] space:3
+    space:2 E6["AI 编码"] space:2
+    space:2 E7["代码审核"] space:2
+    space:3 E8["用户故事验收"] space
+    space:3 E9["修复 bug"] space
+    space:4 E10["冲刺评审与回顾"]
+    classDef header fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#172554
+    classDef activity fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#022c22
+    class P1,P2,P3,P4,P5 header
+    class E1,E2,E3,E4,E5,E6,E7,E8,E9,E10 activity`}
+  description="冲刺研发泳道图：横向展示冲刺计划、需求梳理、编码开发、测试验收和冲刺回顾五个阶段，纵向依次展示十个研发环节。"
+/>
+
+> 流程从冲刺计划开始，经过需求梳理、编码开发和测试验收，最后进行冲刺评审与回顾。
+
+> 建议先阅读[基础概念：从用户故事地图到可执行规范](pathname://../从用户故事地图到可执行规范.html)，再按流程总览定位当前环节。
+
+<MermaidDiagram
+  chart={`flowchart LR
+    R[工程规范<br/>约束实现] --> K[技能手册<br/>提供方法] --> N[知识沉淀<br/>审核 / 修复反馈]
+     classDef header fill:#fef2f2,stroke:#dc2626,stroke-width:2px,color:#5f2525
+     class R,K,N header`}
+  description="支撑层：工程规范、技能手册与知识沉淀支撑研发过程。"
+/>
+
+> 工程规范确定实现边界，技能手册提供处理方法，审核和修复结果并沉淀。

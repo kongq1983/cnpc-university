@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["version", "engine", "database", "namespaces"],
+  "properties": {
+    "version": {"const": 1},
+    "engine": {"enum": ["mysql", "postgresql", "oracle", "sqlite"]},
+    "database": {"type": ["string", "null"]},
+    "namespaces": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["catalog", "schema", "tables"],
+        "properties": {
+          "catalog": {"type": ["string", "null"]},
+          "schema": {"type": ["string", "null"]},
+          "tables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "comment", "detail", "html"],
+              "properties": {
+                "name": {"type": "string"},
+                "comment": {"type": ["string", "null"]},
+                "detail": {"type": "string", "pattern": "^tables/[^/]+/[^/]+/.+\\.json$"},
+                "html": {"type": "string", "pattern": "^tables/[^/]+/[^/]+/.+\\.html$"}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

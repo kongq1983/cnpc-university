@@ -1,0 +1,82 @@
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+}
+
+.header {
+  max-width: 680px;
+  margin-bottom: 2.5rem;
+}
+
+.kicker {
+  margin: 0 0 0.75rem;
+  color: var(--ifm-color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.header h1 {
+  margin: 0 0 1rem;
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.1;
+}
+
+.header p:last-child {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.caption {
+  padding: 0 0 1rem;
+  text-align: left;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--ifm-color-emphasis-300);
+  text-align: left;
+}
+
+.table th:first-child,
+.table td:first-child {
+  width: 5rem;
+  color: var(--ifm-color-emphasis-600);
+}
+
+.table th {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.table tbody tr:hover {
+  background: var(--ifm-color-emphasis-100);
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-top: 3rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.85rem 0.75rem;
+  }
+}

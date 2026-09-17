@@ -1,0 +1,89 @@
+# 技能卡片补充元数据
+#
+# 这里只维护展示信息，不修改 project-scaffold/.agents/skills 下的任何 SKILL.md。
+# 新增或删除技能时，请同步调整本文件中的 skills 键；dependencies 可以指向尚未收录的外部技能。
+skills:
+  bdd:
+    dependencies: [gherkin]
+    tags: [规格定义, 行为测试]
+    author: chenhq
+    source:
+      label: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+      url: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+  db-docs:
+    dependencies: []
+    tags: [数据库文档]
+    author: chenhq
+    source:
+      label: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+      url: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+  diagnosing-bugs:
+    dependencies: []
+    tags: [问题诊断]
+    author: mattpocock
+    source:
+      label: https://github.com/mattpocock/skills
+      url: https://github.com/mattpocock/skills
+  gherkin:
+    dependencies: []
+    tags: [规格定义, 行为测试]
+    author: tsipotU
+    source:
+      label: https://github.com/tsipotU/gherkin-skill
+      url: https://github.com/tsipotU/gherkin-skill
+  grill-me:
+    dependencies: [grilling]
+    tags: [需求澄清, 规划设计]
+    author: mattpocock
+    source:
+      label: https://github.com/mattpocock/skills
+      url: https://github.com/mattpocock/skills
+  grilling:
+    dependencies: []
+    tags: [需求澄清, 规划设计]
+    author: mattpocock
+    source:
+      label: https://github.com/mattpocock/skills
+      url: https://github.com/mattpocock/skills
+  implement:
+    dependencies: [tdd, ui-ux-pro-max]
+    tags: [实现开发]
+    author: chenhq
+    source:
+      label: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+      url: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+  improve-codebase-architecture:
+    dependencies: [grilling, codebase-design, domain-modeling]
+    tags: [架构重构, 规划设计]
+    author: mattpocock
+    source:
+      label: https://github.com/mattpocock/skills
+      url: https://github.com/mattpocock/skills
+  storymaps:
+    dependencies: []
+    tags: [规划设计, 规格定义]
+    author: chenhq
+    source:
+      label: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+      url: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+  tdd:
+    dependencies: [codebase-design]
+    tags: [实现开发, 行为测试]
+    author: mattpocock
+    source:
+      label: https://github.com/mattpocock/skills
+      url: https://github.com/mattpocock/skills
+  ui-ux-pro-max:
+    dependencies: []
+    tags: [界面设计, 规划设计]
+    author: nextlevelbuilder
+    source:
+      label: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+      url: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+  write-skills:
+    dependencies: []
+    tags: [技能工程, 规划设计]
+    author: chenhq
+    source:
+      label: https://gitlab.hzlinks.net/staffs/ai-engineering-guide
+      url: https://gitlab.hzlinks.net/staffs/ai-engineering-guide

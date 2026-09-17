@@ -1,0 +1,94 @@
+:root {
+  --ifm-color-primary: #174a73;
+  --ifm-color-primary-dark: #123c5d;
+  --ifm-color-primary-darker: #103856;
+  --ifm-color-primary-darkest: #0d2d46;
+  --ifm-color-primary-light: #255f8e;
+  --ifm-color-primary-lighter: #2a6799;
+  --ifm-color-primary-lightest: #3d7eae;
+  --ifm-background-color: #f7f9fb;
+  --ifm-card-background-color: #ffffff;
+  --ifm-font-family-base: 'PingFang SC', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+  --ifm-font-family-monospace: 'Cascadia Code', Consolas, monospace;
+  --ifm-heading-font-weight: 650;
+  --ifm-navbar-height: 64px;
+  --ifm-code-font-size: 92%;
+  --docusaurus-highlighted-code-line-bg: rgb(23 74 115 / 10%);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #76acd2;
+  --ifm-color-primary-dark: #5e9bc8;
+  --ifm-color-primary-darker: #4f91c2;
+  --ifm-color-primary-darkest: #3477aa;
+  --ifm-color-primary-light: #8ebcdb;
+  --ifm-color-primary-lighter: #9bc4df;
+  --ifm-color-primary-lightest: #c0dcec;
+  --ifm-background-color: #111a24;
+  --ifm-card-background-color: #182532;
+  --docusaurus-highlighted-code-line-bg: rgb(118 172 210 / 12%);
+}
+
+body {
+  font-size: 14px;
+}
+
+:where(a, button, input, summary):focus-visible {
+  outline: 3px solid var(--ifm-color-primary-light);
+  outline-offset: 3px;
+}
+
+.navbar {
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  box-shadow: none;
+}
+
+.navbar__title {
+  font-weight: 700;
+}
+
+.footer {
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.footer--light {
+  --ifm-footer-background-color: #eef2f5;
+  --ifm-footer-color: var(--ifm-color-emphasis-700);
+}
+
+.ai-coding-warning {
+  margin: 1.5rem 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid #dc2626;
+  border-left-width: 4px;
+  border-radius: 4px;
+  background: #fef2f2;
+  color: #7f1d1d;
+}
+
+.ai-coding-warning strong {
+  color: #b91c1c;
+}
+
+.ai-coding-warning p:last-child {
+  margin-bottom: 0;
+}
+
+[data-theme='dark'] .footer--light {
+  --ifm-footer-background-color: #0d141c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .theme-doc-markdown > h1 {
+    font-size: 2.25rem;
+  }
+}

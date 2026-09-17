@@ -1,0 +1,99 @@
+---
+title: 接入目标项目
+sidebar_label: 接入目标项目
+sidebar_position: 0
+slug: /quick-start
+description: 评估 AI 研发工程指南的交付范围，裁剪候选规范，并完成第一次技能调用。
+---
+
+import ContentGuide from '@site/src/components/ContentGuide';
+
+# 接入目标项目
+
+本页面向准备把指南投放到真实项目的负责人。如果只是查找当前工作的流程或技能，请从[按角色开始](./roles)进入。
+
+这套指南最适合在一个真实项目中使用。默认路径是把项目脚手架复制到目标项目根目录，评审候选规范，然后从一个具体任务开始调用技能。
+
+## 选择接入范围
+
+| 目标 | 建议路径 |
+| --- | --- |
+| 希望同时使用流程、项目规范和技能 | 复制完整的 `project-scaffold/` 项目脚手架 |
+| 只想在现有项目中调用技能 | 只复制 `project-scaffold/.agents/skills/` |
+
+下面以第一条路径为默认示例。
+
+## 第一步：复制项目脚手架
+
+将仓库中 `project-scaffold/` 的内容复制到目标项目根目录。复制完成后，目标项目至少应出现以下结构：
+
+```text
+目标项目/
+├── .agents/
+│   └── skills/
+├── AGENTS.template.md
+├── DESIGN.template.md
+└── docs/
+    └── rules/
+        └── *.template.md
+```
+
+其中 `.agents/skills/` 下的技能可以直接复用；`AGENTS.template.md`、`DESIGN.template.md` 和 `docs/rules/*.template.md` 仍然只是候选模板，不能直接当作目标项目的生效规范。
+
+## 第二步：重命名并评审模板
+
+根据目标项目的技术栈、目录结构和团队约定，选择适用的规范并完成重命名：
+
+```text
+AGENTS.template.md       -> AGENTS.md
+DESIGN.template.md       -> DESIGN.md
+docs/rules/*.template.md -> docs/rules/*.md
+```
+
+评审时至少确认以下内容：
+
+- `AGENTS.md` 中的命令、目录和外部文档是否适用于目标项目。
+- `DESIGN.md` 中的前端技术栈和视觉约束是否适用于目标项目。
+- `docs/rules/` 中只保留实际需要的后端、前端规则，并删除不适用的模板。
+- 模板内部引用同步去掉 `.template` 后缀，并检查链接是否仍然有效。
+
+如果项目只需要技能，可以跳过规范模板的重命名和评审，但仍应确认技能引用的路径与目标项目一致。
+
+## 第三步：调用第一个技能
+
+接入初期最适合先用 `grill-me` 澄清目标和接入计划。它会转入 `grilling` 的设计树式追问，先确认当前决策，再逐轮展开依赖它的后续问题。
+
+在支持技能调用的 AI 编码助手会话中，可以这样发起第一次任务：
+
+```text
+/grill-me 帮我梳理把这套 AI 研发工程指南接入当前项目的计划。
+请重点追问：需要启用哪些模板、第一条研发流程从哪里开始、以及如何验证接入结果。
+```
+
+技能入口：[grill-me](./skills/grill-me/SKILL)。如果任务已经明确，可以按阶段选择其他技能：
+
+| 当前任务 | 下一步技能 |
+| --- | --- |
+| 拆解用户目标和交付范围 | [storymaps](./skills/storymaps/SKILL) |
+| 编写可验收的行为与 Feature 文件 | [bdd](./skills/bdd/SKILL) |
+| 根据已评审的 Feature 文件实现功能 | [implement](./skills/implement/SKILL) |
+| 定位问题 | [diagnosing-bugs](./skills/diagnosing-bugs/SKILL) |
+
+## 第四步：进入研发流程
+
+完成首次澄清后，回到[研发流程总览](./process/)，按当前项目所处阶段继续推进：
+
+1. 从冲刺计划开始，明确目标、容量、范围和风险。
+2. 在需求梳理阶段形成用户故事和 Feature 文件。
+3. 进入 AI 编码前，确保 Feature 文件和项目规范已经评审通过。
+4. 完成代码审核、故事验收和 bug 修复，再进入冲刺回顾。
+
+接入完成的标准不是替项目做完全部流程，而是让团队已经完成项目脚手架接入、模板初步评审，并能判断下一步应进入哪个流程节点。
+
+## 接入后的检查清单
+
+- [ ] `.agents/skills/` 已位于目标项目根目录。
+- [ ] 需要生效的模板已去掉 `.template` 后缀并完成团队评审。
+- [ ] 模板内部链接已同步更新。
+- [ ] 已用 `grill-me` 或其他适合当前任务的技能完成第一次调用。
+- [ ] 已确定下一个研发流程节点和对应产出。

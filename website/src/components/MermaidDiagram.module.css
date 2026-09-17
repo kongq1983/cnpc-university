@@ -1,0 +1,39 @@
+.diagram {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: var(--ifm-code-border-radius);
+  margin-bottom: var(--ifm-leading);
+  overflow-x: auto;
+  padding: 16px;
+  text-align: center;
+}
+
+.diagram[aria-busy='true'] {
+  min-height: 116px;
+}
+
+.loading {
+  align-items: center;
+  color: var(--ifm-color-emphasis-600);
+  display: flex;
+  justify-content: center;
+  min-height: 84px;
+}
+
+.fallback {
+  margin-bottom: var(--ifm-leading);
+}
+
+.fallback p {
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 8px;
+}
+
+.fallback pre {
+  margin-bottom: 0;
+}
+
+.diagram svg {
+  height: auto;
+  max-width: 100%;
+}

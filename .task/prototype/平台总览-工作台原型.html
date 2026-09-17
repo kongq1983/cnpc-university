@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>平台总览（工作台） - 餐饮服务管理平台</title>
+<style>
+  :root{
+    --bg-page:#eef2f8;
+    --surface:#ffffff;
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+    --primary-subtle:#eff6ff;
+    --primary-tint-strong:#dbeafe;
+    --success:#10b981;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --text-primary:#1e293b;
+    --text-secondary:#64748b;
+    --text-muted:#94a3b8;
+    --border-control:#e2e8f0;
+    --border-container:#e8eef6;
+    --border-row:#f1f5f9;
+    --table-header:#f8fafc;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg-page);
+    color:var(--text-primary);
+    font-family:"Noto Sans SC","Inter",-apple-system,"Segoe UI",sans-serif;
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;}
+
+  /* ---------- Header 52px ---------- */
+  .header{
+    height:52px;background:var(--surface);border-bottom:1px solid var(--border-control);
+    display:flex;align-items:center;gap:16px;padding:0 16px;
+  }
+  .header .menu-btn{
+    width:28px;height:28px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;
+    border:0;background:transparent;border-radius:6px;color:var(--text-secondary);cursor:pointer;
+  }
+  .header .menu-btn:hover{background:var(--table-header);}
+  .brand{display:flex;align-items:center;gap:8px;flex:0 0 auto;}
+  .brand .logo{
+    width:24px;height:24px;border-radius:6px;background:var(--primary);
+    display:flex;align-items:center;justify-content:center;color:#fff;
+  }
+  .brand .name{font-size:14px;font-weight:600;white-space:nowrap;}
+  .primary-nav{display:flex;align-items:center;gap:8px;margin-left:8px;}
+  .primary-nav a{
+    height:32px;display:inline-flex;align-items:center;padding:0 12px;border-radius:8px;
+    font-size:14px;color:var(--text-primary);text-decoration:none;white-space:nowrap;
+  }
+  .primary-nav a:hover{background:var(--table-header);}
+  .primary-nav a.active{background:var(--primary-subtle);color:var(--primary);font-weight:500;}
+  .header .spacer{flex:1;}
+  .platform-search{
+    height:32px;width:240px;display:flex;align-items:center;gap:8px;padding:0 10px;
+    background:var(--table-header);border:1px solid transparent;border-radius:8px;color:var(--text-muted);
+  }
+  .platform-search input{
+    border:0;background:transparent;outline:none;width:100%;font-size:14px;
+    font-family:inherit;color:var(--text-primary);
+  }
+  .platform-search input::placeholder{color:var(--text-muted);}
+  .icon-btn{
+    width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+    border:0;background:transparent;border-radius:6px;color:var(--text-secondary);cursor:pointer;position:relative;
+  }
+  .icon-btn:hover{background:var(--table-header);}
+  .icon-btn .dot{
+    position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;
+    background:var(--danger);border:1px solid var(--surface);
+  }
+  .account{
+    width:28px;height:28px;border-radius:50%;background:var(--table-header);border:1px solid var(--border-control);
+    display:flex;align-items:center;justify-content:center;color:var(--text-secondary);cursor:pointer;
+  }
+
+  /* ---------- Secondary Navigation 42px ---------- */
+  .sub-nav{
+    height:42px;background:var(--surface);border-bottom:1px solid var(--border-control);
+    display:flex;align-items:stretch;gap:24px;padding:0 24px;
+  }
+  .sub-nav a{
+    display:inline-flex;align-items:center;font-size:14px;color:var(--text-primary);
+    text-decoration:none;border-bottom:2px solid transparent;
+  }
+  .sub-nav a:hover{color:var(--primary);}
+  .sub-nav a.active{color:var(--primary);font-weight:500;border-bottom-color:var(--primary);}
+
+  /* ---------- Content Area：Dashboard 最大宽度 1600px 居中 ---------- */
+  .content{max-width:1600px;margin:0 auto;padding:20px;}
+  .section + .section{margin-top:20px;}
+  .section-title{font-size:14px;font-weight:600;color:var(--text-primary);margin:0 0 12px;}
+
+  /* ---------- Hero 汇总区：唯一允许的渐变场景 ---------- */
+  .hero{
+    background:linear-gradient(90deg,#2563eb 0%,#3b82f6 55%,#60a5fa 100%);
+    border-radius:12px;padding:22px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  }
+  .hero-title{margin:0;font-size:24px;font-weight:700;color:#fff;}
+  .hero-sub{margin:6px 0 0;font-size:13px;color:rgba(255,255,255,.85);}
+  .hero-stats{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .hero-stat{display:flex;flex-direction:column;gap:2px;min-width:0;}
+  .hero-stat .k{font-size:12px;color:rgba(255,255,255,.78);white-space:nowrap;}
+  .hero-stat .v{font-size:14px;font-weight:600;color:#fff;font-variant-numeric:tabular-nums;}
+
+  /* ---------- 经营模式分布：Scene Tabs（外层 24px / Padding 4px / 内项 20px） ---------- */
+  .cards-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+  .tabs-scene{
+    display:inline-flex;align-items:center;gap:4px;background:var(--surface);
+    border:1px solid var(--border-container);border-radius:24px;padding:4px;
+  }
+  .scene-tab{
+    height:32px;display:inline-flex;align-items:center;padding:0 16px;border:0;background:transparent;
+    border-radius:20px;font-size:13px;color:var(--text-primary);cursor:pointer;white-space:nowrap;
+  }
+  .scene-tab:hover{background:var(--table-header);}
+  .scene-tab.active{background:var(--primary);color:#fff;font-weight:500;}
+  .scene-tab:disabled{color:var(--text-muted);cursor:not-allowed;background:transparent;}
+  .tab-meta{font-size:12px;margin-left:6px;opacity:.9;font-variant-numeric:tabular-nums;}
+  .pager{display:flex;align-items:center;gap:8px;}
+  .pager .idx{font-size:12px;color:var(--text-secondary);font-variant-numeric:tabular-nums;}
+
+  /* ---------- 食堂卡片区 ---------- */
+  .canteen-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .canteen-card{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:12px;
+    padding:16px 20px;cursor:pointer;transition:border-color .15s;
+  }
+  .canteen-card:hover{border-color:var(--primary-tint-strong);}
+  .canteen-card.is-hidden{display:none;}
+  .cc-head{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .cc-name{margin:0;font-size:16px;font-weight:700;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .cc-meta{margin-top:12px;display:flex;flex-direction:column;gap:8px;}
+  .cc-row{display:flex;align-items:center;gap:8px;min-width:0;}
+  .cc-row .k{font-size:12px;color:var(--text-secondary);flex:0 0 auto;}
+  .cc-row .v{font-size:13px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  /* 各餐厅今日运营对比：子 Card 8px */
+  .cc-today{
+    margin-top:12px;padding:10px 12px;background:var(--table-header);border-radius:8px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  }
+  .cc-today .k{font-size:12px;color:var(--text-secondary);white-space:nowrap;}
+  .cc-today .v{font-size:16px;font-weight:700;line-height:1.3;font-variant-numeric:tabular-nums;}
+  .cc-foot{
+    margin-top:12px;display:flex;align-items:center;gap:4px;font-size:12px;color:var(--primary);
+  }
+  .empty{
+    grid-column:1 / -1;padding:40px 0;text-align:center;font-size:13px;color:var(--text-muted);
+    background:var(--surface);border:1px solid var(--border-container);border-radius:12px;
+  }
+  .empty.is-hidden{display:none;}
+
+  /* ---------- Dot Status / Status Tag ---------- */
+  .dot-status{display:inline-flex;align-items:center;gap:6px;font-size:12px;white-space:nowrap;}
+  .dot-status::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;}
+  .dot-on{color:var(--success);}
+  .dot-maint{color:var(--warning);}
+  .dot-closed{color:var(--text-muted);}
+  .tag{
+    display:inline-block;font-size:12px;line-height:16px;padding:2px 8px;border-radius:4px;white-space:nowrap;
+  }
+  .tag-green{background:#ecfdf5;color:var(--success);}
+  .tag-amber{background:#fffbeb;color:#b45309;}
+  .tag-red{background:#fef2f2;color:var(--danger);}
+  .tag-blue{background:var(--primary-subtle);color:var(--primary);}
+  .tag-gray{background:#f1f5f9;color:var(--text-secondary);}
+
+  /* ---------- KPI / 指标卡（KPI Card 10px / Padding 16px 20px / 无阴影） ---------- */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .kpi-card{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:10px;
+    padding:16px 20px;display:flex;align-items:center;gap:12px;
+  }
+  .kpi-icon{
+    width:40px;height:40px;flex:0 0 40px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .kpi-icon.blue{background:var(--primary-subtle);color:var(--primary);}
+  .kpi-icon.green{background:#ecfdf5;color:var(--success);}
+  .kpi-icon.amber{background:#fffbeb;color:#b45309;}
+  .kpi-icon.red{background:#fef2f2;color:var(--danger);}
+  .kpi-body{min-width:0;}
+  .kpi-label{font-size:12px;color:var(--text-secondary);}
+  .kpi-value{font-size:24px;font-weight:700;line-height:1.25;color:var(--text-primary);font-variant-numeric:tabular-nums;}
+  .kpi-value .split{font-size:16px;font-weight:600;color:var(--text-muted);}
+  .kpi-sub{font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  /* ---------- 风险与待办 ---------- */
+  .risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .risk-card{
+    background:var(--surface);border:1px solid var(--border-container);border-radius:12px;
+    padding:16px 20px;display:flex;align-items:flex-start;gap:12px;
+  }
+  .risk-icon{width:40px;height:40px;flex:0 0 40px;border-radius:8px;display:flex;align-items:center;justify-content:center;}
+  .risk-icon.red{background:#fef2f2;color:var(--danger);}
+  .risk-icon.amber{background:#fffbeb;color:#b45309;}
+  .risk-icon.blue{background:var(--primary-subtle);color:var(--primary);}
+  .risk-body{flex:1;min-width:0;}
+  .risk-label{font-size:12px;color:var(--text-secondary);}
+  .risk-value{font-size:24px;font-weight:700;line-height:1.25;font-variant-numeric:tabular-nums;}
+  .risk-sub{font-size:12px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .risk-more{align-self:center;}
+  .link-action{
+    border:0;background:transparent;padding:0;font-size:12px;color:var(--primary);cursor:pointer;
+    font-family:inherit;text-decoration:none;white-space:nowrap;
+  }
+  .link-action:hover{color:var(--primary-hover);text-decoration:underline;}
+
+  /* ---------- 公告 与 快捷入口 ---------- */
+  .two-col{display:grid;grid-template-columns:1.15fr 1fr;gap:16px;}
+  .panel{background:var(--surface);border:1px solid var(--border-container);border-radius:12px;padding:20px;}
+  .panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;}
+  .panel-title{font-size:16px;font-weight:700;color:var(--text-primary);}
+  .notice-item{
+    display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border-row);
+    cursor:pointer;text-decoration:none;
+  }
+  .notice-item:last-child{border-bottom:0;}
+  .notice-item:hover .notice-title{color:var(--primary);}
+  .notice-title{
+    flex:1;min-width:0;font-size:13px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .notice-time{font-size:12px;color:var(--text-muted);white-space:nowrap;font-variant-numeric:tabular-nums;}
+  .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .quick-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border-container);
+    border-radius:8px;cursor:pointer;background:var(--surface);text-decoration:none;
+  }
+  .quick-item:hover{background:var(--table-header);border-color:var(--primary-tint-strong);}
+  .quick-icon{width:28px;height:28px;flex:0 0 28px;border-radius:6px;background:var(--primary-subtle);color:var(--primary);display:flex;align-items:center;justify-content:center;}
+  .quick-name{font-size:13px;color:var(--text-primary);white-space:nowrap;}
+
+  /* ---------- Button 规范 ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;border-radius:6px;
+    font-family:inherit;cursor:pointer;white-space:nowrap;text-decoration:none;
+  }
+  .btn-secondary-toolbar{height:30px;padding:0 14px;font-size:12px;border:1px solid var(--border-control);background:var(--surface);color:var(--text-primary);}
+  .btn-secondary-toolbar:hover{background:var(--table-header);}
+  .btn-secondary-toolbar:disabled{color:var(--text-muted);cursor:not-allowed;background:var(--surface);}
+  .btn.icon-only{width:30px;padding:0;}
+  .btn-secondary-filter{height:32px;padding:0 16px;font-size:13px;border:1px solid var(--border-control);background:var(--surface);color:var(--text-primary);}
+  .btn-secondary-filter:hover{background:var(--table-header);}
+
+  /* ---------- 运营下钻：右侧抽屉 ---------- */
+  .drawer-mask{
+    position:fixed;inset:0;background:rgba(15,23,42,.45);opacity:0;visibility:hidden;
+    transition:opacity .2s ease;z-index:60;
+  }
+  .drawer-mask.open{opacity:1;visibility:visible;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:680px;max-width:100%;background:var(--surface);
+    border-left:1px solid var(--border-container);box-shadow:-8px 0 24px rgba(15,23,42,.12);
+    transform:translateX(100%);transition:transform .22s ease;z-index:61;
+    display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:20px;border-bottom:1px solid var(--border-row);display:flex;align-items:flex-start;
+    justify-content:space-between;gap:12px;
+  }
+  .drawer-title{margin:0;font-size:16px;font-weight:700;color:var(--text-primary);}
+  .drawer-sub{margin:6px 0 0;font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .drawer-close{
+    width:28px;height:28px;border:0;background:transparent;border-radius:6px;color:var(--text-secondary);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;
+  }
+  .drawer-close:hover{background:var(--table-header);}
+  .drawer-body{padding:20px;overflow:auto;flex:1;}
+  .drawer-section{margin:0 0 12px;font-size:14px;font-weight:600;color:var(--text-primary);}
+  .drawer-body .drawer-section:not(:first-child){margin-top:20px;}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  .info-item{border-bottom:1px solid var(--border-row);padding-bottom:8px;min-width:0;}
+  .info-item .k{font-size:12px;color:var(--text-secondary);margin-bottom:4px;}
+  .info-item .v{font-size:13px;color:var(--text-primary);min-height:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .sub-table{border:1px solid var(--border-container);border-radius:8px;overflow:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{
+    background:var(--table-header);color:var(--text-secondary);font-weight:500;font-size:13px;
+    text-align:left;padding:10px 14px;white-space:nowrap;border-bottom:1px solid var(--border-row);
+  }
+  tbody td{padding:10px 14px;border-bottom:1px solid var(--border-row);color:var(--text-primary);}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr:hover{background:var(--table-header);}
+  td.num{font-variant-numeric:tabular-nums;}
+
+  /* 近 7 日就餐趋势（本期唯一授权图表） */
+  .chart{display:flex;gap:8px;}
+  .chart-y{
+    width:44px;height:160px;display:flex;flex-direction:column;justify-content:space-between;
+    font-size:11px;color:var(--text-muted);text-align:right;font-variant-numeric:tabular-nums;
+  }
+  .chart-plot{position:relative;flex:1;height:160px;border-left:1px solid var(--border-control);border-bottom:1px solid var(--border-control);}
+  .chart-plot .gridline{position:absolute;left:0;right:0;border-top:1px dashed var(--border-row);}
+  .chart-plot .gridline.g1{top:0;}
+  .chart-plot .gridline.g2{top:50%;}
+  .bars{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:space-around;gap:10px;padding:0 10px;}
+  .bar{flex:1;max-width:28px;background:var(--primary);border-radius:3px 3px 0 0;}
+  .chart-x{display:flex;justify-content:space-around;font-size:11px;color:var(--text-muted);margin-top:6px;padding-left:52px;}
+
+  /* 未闭环预警列表 */
+  .alert-item{
+    display:flex;gap:10px;padding:12px;border:1px solid var(--border-container);border-radius:8px;background:var(--surface);
+  }
+  .alert-item + .alert-item{margin-top:10px;}
+  .alert-icon{
+    width:28px;height:28px;flex:0 0 28px;border-radius:6px;background:#fef2f2;color:var(--danger);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .alert-body{flex:1;min-width:0;}
+  .alert-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .alert-title{font-size:13px;font-weight:600;color:var(--text-primary);}
+  .alert-desc{font-size:12px;color:var(--text-secondary);margin-top:4px;}
+  .alert-state{flex:0 0 auto;}
+
+  /* ---------- Footer ---------- */
+  .footer{
+    background:var(--surface);border-top:1px solid var(--border-control);
+    padding:14px 20px;text-align:center;font-size:12px;color:var(--text-muted);margin-top:20px;
+  }
+
+  /* 角色差异：食堂经理视角 */
+  body.role-manager .hero-stat.dist{display:none;}
+  body.role-manager .tab-pct{display:none;}
+  body.role-manager #runStatus{display:none;}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <button class="menu-btn" aria-label="菜单">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  </button>
+  <div class="brand">
+    <span class="logo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 3v8a3 3 0 0 0 6 0V3"/><path d="M8 11v10"/><path d="M17 3c-1.5 2-2 3.5-2 5.5S16 12 17 13v8"/>
+      </svg>
+    </span>
+    <span class="name">餐饮服务管理平台</span>
+  </div>
+  <nav class="primary-nav">
+    <a href="#" class="active">工作台</a>
+    <a href="#">人员合规</a>
+    <a href="#">在岗编制</a>
+    <a href="#">管理驾驶舱</a>
+  </nav>
+  <span class="spacer"></span>
+  <div class="platform-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>
+    </svg>
+    <input type="text" placeholder="搜索">
+  </div>
+  <button class="icon-btn" aria-label="消息">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.5 20a2 2 0 0 0 3 0"/>
+    </svg>
+    <span class="dot"></span>
+  </button>
+  <div class="account" aria-label="账号">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c0-3.3 3.1-6 7-6s7 2.7 7 6"/>
+    </svg>
+  </div>
+</header>
+
+<!-- Secondary Navigation -->
+<nav class="sub-nav">
+  <a href="#" class="active">平台总览</a>
+</nav>
+
+<main class="content">
+
+  <!-- Hero 汇总区 -->
+  <section class="section">
+    <div class="hero">
+      <div>
+        <h1 class="hero-title" id="heroTitle">全校食堂运营总览</h1>
+        <p class="hero-sub" id="heroSub">今日实时 · 一屏统揽 10 家食堂</p>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="k">食堂总数</span>
+          <span class="v" id="heroTotal">10 家</span>
+        </div>
+        <div class="hero-stat dist" id="heroDist">
+          <span class="k">经营模式分布</span>
+          <span class="v">自营 50% / 委托承包 30% / 合作经营 20%</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 经营模式分布 + 食堂卡片区 -->
+  <section class="section">
+    <div class="cards-head">
+      <div class="tabs-scene" role="tablist" aria-label="经营模式分布">
+        <button class="scene-tab active" type="button" role="tab" data-mode="自营">
+          自营<span class="tab-meta"><span class="tab-count">5 家</span><span class="tab-pct"> · 50%</span></span>
+        </button>
+        <button class="scene-tab" type="button" role="tab" data-mode="委托承包">
+          委托承包<span class="tab-meta"><span class="tab-count">3 家</span><span class="tab-pct"> · 30%</span></span>
+        </button>
+        <button class="scene-tab" type="button" role="tab" data-mode="合作经营">
+          合作经营<span class="tab-meta"><span class="tab-count">2 家</span><span class="tab-pct"> · 20%</span></span>
+        </button>
+      </div>
+      <div class="pager" id="pager">
+        <button class="btn btn-secondary-toolbar icon-only" type="button" data-action="prev" aria-label="上一页">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 6l-6 6 6 6"/>
+          </svg>
+        </button>
+        <span class="idx" id="pagerIdx">1 / 2</span>
+        <button class="btn btn-secondary-toolbar icon-only" type="button" data-action="next" aria-label="下一页">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 6l6 6-6 6"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 自营 -->
+    <div class="tab-panel" data-panel="自营">
+      <div class="canteen-grid">
+        <article class="canteen-card" data-action="open"
+          data-name="南苑食堂" data-mode="自营" data-status="营业中" data-grade="A"
+          data-contractor="—" data-contract-range="—" data-contract-state="正常"
+          data-open-time="06:30 - 19:30" data-seats="520 个" data-staff="24 / 28 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥58.2 万">
+          <div class="cc-head">
+            <h3 class="cc-name">南苑食堂</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">—</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥1.94 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">3,230</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">3</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="西区餐厅" data-mode="自营" data-status="营业中" data-grade="B"
+          data-contractor="—" data-contract-range="—" data-contract-state="正常"
+          data-open-time="06:30 - 19:30" data-seats="480 个" data-staff="21 / 24 人"
+          data-stock-state="告急" data-disinfection="消杀中" data-revenue="¥63.8 万">
+          <div class="cc-head">
+            <h3 class="cc-name">西区餐厅</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">—</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥2.13 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">3,550</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">5</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="东苑食堂" data-mode="自营" data-status="维护中" data-grade="B"
+          data-contractor="—" data-contract-range="—" data-contract-state="正常"
+          data-open-time="07:00 - 18:30" data-seats="320 个" data-staff="12 / 16 人"
+          data-stock-state="正常" data-disinfection="待消杀" data-revenue="¥31.5 万">
+          <div class="cc-head">
+            <h3 class="cc-name">东苑食堂</h3>
+            <span class="dot-status dot-maint">维护中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">—</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥1.05 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">1,750</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">1</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="教工餐厅" data-mode="自营" data-status="营业中" data-grade="A"
+          data-contractor="—" data-contract-range="—" data-contract-state="正常"
+          data-open-time="07:00 - 20:00" data-seats="180 个" data-staff="9 / 10 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥22.4 万">
+          <div class="cc-head">
+            <h3 class="cc-name">教工餐厅</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">—</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥0.75 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">1,250</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--text-muted)">0</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="清真食堂" data-mode="自营" data-status="营业中" data-grade="A"
+          data-contractor="—" data-contract-range="—" data-contract-state="正常"
+          data-open-time="06:30 - 19:00" data-seats="120 个" data-staff="6 / 6 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥12.7 万">
+          <div class="cc-head">
+            <h3 class="cc-name">清真食堂</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">—</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥0.42 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">700</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--text-muted)">0</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <div class="empty is-hidden">暂无数据</div>
+      </div>
+    </div>
+
+    <!-- 委托承包 -->
+    <div class="tab-panel" data-panel="委托承包" hidden>
+      <div class="canteen-grid">
+        <article class="canteen-card" data-action="open"
+          data-name="北苑食堂" data-mode="委托承包" data-status="营业中" data-grade="A"
+          data-contractor="中快餐饮集团" data-contract-range="2024-09-01 ~ 2027-08-31" data-contract-state="正常"
+          data-open-time="06:30 - 19:30" data-seats="640 个" data-staff="28 / 32 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥78.6 万">
+          <div class="cc-head">
+            <h3 class="cc-name">北苑食堂</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">中快餐饮集团</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥2.62 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">4,370</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">8</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="美食广场" data-mode="委托承包" data-status="营业中" data-grade="B"
+          data-contractor="千喜鹤餐饮管理有限公司" data-contract-range="2023-09-01 ~ 2026-08-31" data-contract-state="已逾期"
+          data-open-time="09:00 - 21:00" data-seats="420 个" data-staff="18 / 22 人"
+          data-stock-state="告急" data-disinfection="消杀中" data-revenue="¥45.3 万">
+          <div class="cc-head">
+            <h3 class="cc-name">美食广场</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">千喜鹤餐饮管理有限公司</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-red">已逾期</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥1.51 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">2,520</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">6</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="西点烘焙坊" data-mode="委托承包" data-status="营业中" data-grade="A"
+          data-contractor="麦香食品有限公司" data-contract-range="2026-09-01 ~ 2027-08-31" data-contract-state="正常"
+          data-open-time="07:30 - 20:00" data-seats="60 个" data-staff="4 / 5 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥9.8 万">
+          <div class="cc-head">
+            <h3 class="cc-name">西点烘焙坊</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">麦香食品有限公司</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-green">正常</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥0.33 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">550</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--text-muted)">0</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <div class="empty is-hidden">暂无数据</div>
+      </div>
+    </div>
+
+    <!-- 合作经营 -->
+    <div class="tab-panel" data-panel="合作经营" hidden>
+      <div class="canteen-grid">
+        <article class="canteen-card" data-action="open"
+          data-name="学生活动中心餐厅" data-mode="合作经营" data-status="营业中" data-grade="B"
+          data-contractor="华工后勤服务有限公司" data-contract-range="2025-01-01 ~ 2026-11-30" data-contract-state="即将到期"
+          data-open-time="10:00 - 21:00" data-seats="360 个" data-staff="15 / 18 人"
+          data-stock-state="正常" data-disinfection="已消杀" data-revenue="¥38.9 万">
+          <div class="cc-head">
+            <h3 class="cc-name">学生活动中心餐厅</h3>
+            <span class="dot-status dot-on">营业中</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">华工后勤服务有限公司</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-amber">即将到期</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥1.30 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">2,170</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--danger)">3</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <article class="canteen-card" data-action="open"
+          data-name="咖啡书吧" data-mode="合作经营" data-status="停业" data-grade="B"
+          data-contractor="拾光文化发展有限公司" data-contract-range="2024-03-01 ~ 2026-02-28" data-contract-state="已终止"
+          data-open-time="10:00 - 20:00" data-seats="48 个" data-staff="0 / 3 人"
+          data-stock-state="告急" data-disinfection="待消杀" data-revenue="¥0 万">
+          <div class="cc-head">
+            <h3 class="cc-name">咖啡书吧</h3>
+            <span class="dot-status dot-closed">停业</span>
+          </div>
+          <div class="cc-meta">
+            <div class="cc-row"><span class="k">承包方</span><span class="v">拾光文化发展有限公司</span></div>
+            <div class="cc-row"><span class="k">合同履约</span><span class="v"><span class="tag tag-gray">已终止</span></span></div>
+          </div>
+          <div class="cc-today">
+            <div><div class="k">今日营收</div><div class="v">¥0 万</div></div>
+            <div><div class="k">今日就餐</div><div class="v">0</div></div>
+            <div><div class="k">今日投诉</div><div class="v" style="color:var(--text-muted)">0</div></div>
+          </div>
+          <div class="cc-foot">查看运营详情
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </article>
+
+        <div class="empty is-hidden">暂无数据</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 平台运行状态 -->
+  <section class="section" id="runStatus">
+    <h2 class="section-title">平台运行状态</h2>
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="8.5" r="3.2"/><path d="M3 20c0-3 2.7-5.4 6-5.4S15 17 15 20"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6"/><path d="M18 14.8c2 .8 3.4 2.6 3.4 5.2"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">平台用户</div>
+          <div class="kpi-value" id="kpiUser">21</div>
+          <div class="kpi-sub">启用账号 21 · 角色 2</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20V6.5L12 3l8 3.5V20"/><path d="M9 20v-5h6v5"/><path d="M9 10h.01M15 10h.01"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">接入组织</div>
+          <div class="kpi-value">10</div>
+          <div class="kpi-sub">学校 1 · 中心 1 · 食堂 10 · 集团 1</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/>
+            <path d="M7 7h.01M7 17h.01M11 7h6M11 17h6"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">边缘网关</div>
+          <div class="kpi-value">7 <span class="split">/ 10</span></div>
+          <div class="kpi-sub">在线率 70%</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8.2 12 4l9 4.2-9 4.2z"/><path d="M3 8.2v7.6L12 20l9-4.2V8.2"/><path d="M12 12.4V20"/>
+          </svg>
+        </span>
+        <div class="kpi-body">
+          <div class="kpi-label">设备在线</div>
+          <div class="kpi-value">126 <span class="split">/ 138</span></div>
+          <div class="kpi-sub">在线率 91.3%</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 风险与待办 -->
+  <section class="section">
+    <h2 class="section-title">风险与待办</h2>
+    <div class="risk-grid">
+      <div class="risk-card">
+        <span class="risk-icon red">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 4.5 3 19.5h18z"/><path d="M12 10v4.5"/><path d="M12 17.3v.1"/>
+          </svg>
+        </span>
+        <div class="risk-body">
+          <div class="risk-label">未闭环预警</div>
+          <div class="risk-value" id="riskWarn" style="color:var(--danger)">39</div>
+          <div class="risk-sub">含网关离线、温度异常等</div>
+        </div>
+        <div class="risk-more">
+          <button class="link-action" type="button" data-action="jump" data-target="智能预警">查看全部</button>
+        </div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-icon amber">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 4h8l1 3H7z"/><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 11h6M9 14.5h6M9 18h3"/>
+          </svg>
+        </span>
+        <div class="risk-body">
+          <div class="risk-label">巡检整改</div>
+          <div class="risk-value" id="riskRectify" style="color:#b45309">12</div>
+          <div class="risk-sub">待处理整改单</div>
+        </div>
+        <div class="risk-more">
+          <button class="link-action" type="button" data-action="jump" data-target="合规巡检">查看全部</button>
+        </div>
+      </div>
+      <div class="risk-card">
+        <span class="risk-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14.5 5.5a4 4 0 0 0 5 5L11 19H6v-5z"/><path d="M6 19l-2 2"/>
+          </svg>
+        </span>
+        <div class="risk-body">
+          <div class="risk-label">维修工单</div>
+          <div class="risk-value" id="riskRepair" style="color:var(--primary)">7</div>
+          <div class="risk-sub" id="riskRepairSub">待派单 4 · 处理中 3</div>
+        </div>
+        <div class="risk-more">
+          <button class="link-action" type="button" data-action="jump" data-target="维修工单">查看全部</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 公告 与 快捷入口 -->
+  <section class="section">
+    <div class="two-col">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">公告</div>
+          <button class="link-action" type="button" data-action="jump" data-target="公告列表">更多</button>
+        </div>
+        <a class="notice-item" href="#jump-to-notice">
+          <span class="tag tag-red">食安</span>
+          <span class="notice-title">关于秋季校园食品安全专项检查安排的通知</span>
+          <span class="notice-time">09-17 09:20</span>
+        </a>
+        <a class="notice-item" href="#jump-to-notice">
+          <span class="tag tag-blue">运营</span>
+          <span class="notice-title">国庆假期食堂营业时间调整方案</span>
+          <span class="notice-time">09-16 17:05</span>
+        </a>
+        <a class="notice-item" href="#jump-to-notice">
+          <span class="tag tag-amber">公示</span>
+          <span class="notice-title">2026 年第三季度承包方履约评价结果公示</span>
+          <span class="notice-time">09-15 11:30</span>
+        </a>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">快捷入口</div>
+        </div>
+        <div class="quick-grid">
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="食堂运营">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 3v8a3 3 0 0 0 6 0V3"/><path d="M8 11v10"/><path d="M17 3c-1.5 2-2 3.5-2 5.5S16 12 17 13v8"/>
+              </svg>
+            </span>
+            <span class="quick-name">食堂运营</span>
+          </a>
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="经营分析">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19V5"/><path d="M4 19h16"/><path d="M8 19v-6M12 19V9M16 19v-4"/>
+              </svg>
+            </span>
+            <span class="quick-name">经营分析</span>
+          </a>
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="合规巡检">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="4" width="14" height="16" rx="2"/><path d="M9 9h6M9 13h6M9 17h3"/>
+              </svg>
+            </span>
+            <span class="quick-name">合规巡检</span>
+          </a>
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="中心考核">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="9.5" r="5"/><path d="M8.5 14 7 21l5-2.5 5 2.5-1.5-7"/>
+              </svg>
+            </span>
+            <span class="quick-name">中心考核</span>
+          </a>
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="维修工单">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14.5 5.5a4 4 0 0 0 5 5L11 19H6v-5z"/><path d="M6 19l-2 2"/>
+              </svg>
+            </span>
+            <span class="quick-name">维修工单</span>
+          </a>
+          <a class="quick-item" href="#jump-to-other-system" data-action="jump" data-target="智能预警">
+            <span class="quick-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 4.5 3 19.5h18z"/><path d="M12 10v4.5"/><path d="M12 17.3v.1"/>
+              </svg>
+            </span>
+            <span class="quick-name">智能预警</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">餐饮服务管理平台 · 平台总览（工作台）原型 · 数据为原型占位示例</footer>
+
+<!-- 运营下钻抽屉 -->
+<div class="drawer-mask" id="drawerMask"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer-head">
+    <div>
+      <h2 class="drawer-title" id="drawerTitle">食堂 · 运营下钻</h2>
+      <p class="drawer-sub">
+        <span id="drawerMode">—</span>
+        <span id="drawerStatus" class="dot-status dot-on">营业中</span>
+        <span>卫生等级 <b id="drawerGrade">—</b></span>
+      </p>
+    </div>
+    <button class="drawer-close" type="button" data-action="close" aria-label="关闭">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M6 6l12 12M18 6L6 18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <h3 class="drawer-section">基本信息</h3>
+    <div class="info-grid">
+      <div class="info-item"><div class="k">经营模式</div><div class="v" data-field="mode"></div></div>
+      <div class="info-item"><div class="k">承包方</div><div class="v" data-field="contractor"></div></div>
+      <div class="info-item"><div class="k">合同起止</div><div class="v" data-field="contractRange"></div></div>
+      <div class="info-item"><div class="k">合同履约状态</div><div class="v" data-field="contractState"></div></div>
+      <div class="info-item"><div class="k">营业时间</div><div class="v" data-field="openTime"></div></div>
+      <div class="info-item"><div class="k">餐位数</div><div class="v" data-field="seats"></div></div>
+      <div class="info-item"><div class="k">在岗 / 编制</div><div class="v" data-field="staff"></div></div>
+      <div class="info-item"><div class="k">库存状态</div><div class="v" data-field="stockState"></div></div>
+      <div class="info-item"><div class="k">消杀状态</div><div class="v" data-field="disinfection"></div></div>
+      <div class="info-item"><div class="k">本月营收</div><div class="v" data-field="revenue"></div></div>
+    </div>
+
+    <h3 class="drawer-section">今日预约</h3>
+    <div class="sub-table">
+      <table>
+        <thead>
+          <tr><th>预约人</th><th>餐次</th><th>时段</th><th>人数</th><th>状态</th></tr>
+        </thead>
+        <tbody id="reserveBody"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px;text-align:right;">
+      <button class="link-action" type="button" data-action="jump" data-target="预约列表">查看全部</button>
+    </div>
+
+    <h3 class="drawer-section">近 7 日就餐趋势</h3>
+    <div class="chart">
+      <div class="chart-y"><span>2,600</span><span>1,300</span><span>0</span></div>
+      <div style="flex:1;min-width:0;">
+        <div class="chart-plot">
+          <div class="gridline g1"></div>
+          <div class="gridline g2"></div>
+          <div class="bars" id="trendBars"></div>
+        </div>
+        <div class="chart-x" id="trendX"></div>
+      </div>
+    </div>
+
+    <h3 class="drawer-section">未闭环预警</h3>
+    <div id="alertList"></div>
+  </div>
+
+  <div class="drawer-head" style="border-bottom:0;border-top:1px solid var(--border-row);justify-content:flex-end;">
+    <button class="btn btn-secondary-filter" type="button" data-action="close">关闭</button>
+  </div>
+</aside>
+
+<script>
+  (function(){
+    var PAGE_SIZE = 4;
+    // 角色：默认后勤主任（全校）；追加 ?role=manager 演示食堂经理（本餐厅）
+    var ROLE = new URLSearchParams(location.search).get('role') === 'manager' ? 'manager' : 'admin';
+    var MANAGER_SCOPE = ['南苑食堂'];
+
+    var state = { mode: '自营', page: 1 };
+
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.scene-tab'));
+    var panels = Array.prototype.slice.call(document.querySelectorAll('.tab-panel'));
+    var pager = document.getElementById('pager');
+    var pagerIdx = document.getElementById('pagerIdx');
+
+    var contractTagClass = {
+      '正常': 'tag-green', '即将到期': 'tag-amber', '已逾期': 'tag-red',
+      '已终止': 'tag-gray'
+    };
+    var stockTagClass = { '正常': 'tag-green', '告急': 'tag-red' };
+    var disinfectionTagClass = { '已消杀': 'tag-green', '消杀中': 'tag-amber', '待消杀': 'tag-gray' };
+    var alertStateTagClass = { '已整改': 'tag-green', '待指派': 'tag-amber', '处理中': 'tag-blue', '已闭环': 'tag-green' };
+
+    /* ---------- 经营模式分布 / 卡片翻页 ---------- */
+    function activePanel(){
+      return panels.filter(function(p){ return p.dataset.panel === state.mode; })[0];
+    }
+
+    function visibleCards(){
+      var cards = Array.prototype.slice.call(activePanel().querySelectorAll('.canteen-card'));
+      if (ROLE === 'manager'){
+        cards = cards.filter(function(c){ return MANAGER_SCOPE.indexOf(c.dataset.name) > -1; });
+      }
+      return cards;
+    }
+
+    function renderCards(){
+      panels.forEach(function(p){ p.hidden = p.dataset.panel !== state.mode; });
+      var panel = activePanel();
+      var cards = Array.prototype.slice.call(panel.querySelectorAll('.canteen-card'));
+      var visible = visibleCards();
+      var totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+      if (state.page > totalPages) state.page = totalPages;
+
+      cards.forEach(function(c){ c.classList.add('is-hidden'); });
+      visible.forEach(function(c, i){
+        var pageIdx = Math.floor(i / PAGE_SIZE) + 1;
+        c.classList.toggle('is-hidden', pageIdx !== state.page);
+      });
+
+      var empty = panel.querySelector('.empty');
+      if (empty) empty.classList.toggle('is-hidden', visible.length > 0);
+
+      pagerIdx.textContent = state.page + ' / ' + totalPages;
+      // 食堂总数 ≤ 每页容量时隐藏翻页控件
+      var needPager = visible.length > PAGE_SIZE;
+      pager.style.display = needPager ? 'flex' : 'none';
+      pager.querySelector('[data-action="prev"]').disabled = state.page <= 1;
+      pager.querySelector('[data-action="next"]').disabled = state.page >= totalPages;
+    }
+
+    function applyTabs(){
+      tabs.forEach(function(t){
+        var mode = t.dataset.mode;
+        t.classList.toggle('active', mode === state.mode);
+        if (ROLE === 'manager'){
+          var mine = document.querySelector('.canteen-card[data-name="' + MANAGER_SCOPE[0] + '"]');
+          var myMode = mine ? mine.dataset.mode : '';
+          t.querySelector('.tab-count').textContent = (mode === myMode ? '1 家' : '0 家');
+          t.disabled = mode !== myMode;
+        } else {
+          t.disabled = false;
+        }
+      });
+    }
+
+    /* ---------- 抽屉：今日预约 / 趋势 / 未闭环预警（原型占位数据） ---------- */
+    var DEFAULT_DETAIL = {
+      trend: [1520, 1680, 1590, 1740, 1660, 1810, 1750],
+      reserves: [
+        { who: '林同学', meal: '午餐', slot: '12:30-13:00', num: '3 人', state: '已预约' },
+        { who: '许同学', meal: '午餐', slot: '12:00-12:30', num: '2 人', state: '已预约' },
+        { who: '陈老师', meal: '午餐', slot: '11:30-12:00', num: '6 人', state: '已核销' },
+        { who: '王同学', meal: '晚餐', slot: '17:30-18:00', num: '4 人', state: '已预约' },
+        { who: '李同学', meal: '早餐', slot: '07:30-08:00', num: '1 人', state: '已取消' }
+      ],
+      alerts: [
+        { title: '留样记录缺失', level: '重要', desc: '当日 2 个档口留样记录未上传，已触发食安留痕校验。', state: '待指派' },
+        { title: '消毒记录延迟', level: '重要', desc: '后厨消毒记录提交时间晚于规定时段 40 分钟。', state: '处理中' },
+        { title: '人员健康证临期', level: '一般', desc: '在岗人员中 2 人健康证将在 30 天内到期，需换证。', state: '已整改' }
+      ]
+    };
+
+    var DETAIL = {
+      '西区餐厅': {
+        trend: [1810, 2060, 1930, 2210, 2140, 2430, 2380],
+        reserves: [
+          { who: '林同学', meal: '午餐', slot: '12:30-13:00', num: '3 人', state: '已预约' },
+          { who: '许同学', meal: '午餐', slot: '12:00-12:30', num: '2 人', state: '已预约' },
+          { who: '陈老师', meal: '午餐', slot: '11:30-12:00', num: '6 人', state: '已核销' },
+          { who: '王同学', meal: '晚餐', slot: '17:30-18:00', num: '4 人', state: '已预约' },
+          { who: '李同学', meal: '早餐', slot: '07:30-08:00', num: '1 人', state: '已取消' }
+        ],
+        alerts: [
+          { title: '投诉率上升', level: '重要', desc: '本周投诉率 0.72%，超过 0.5% 警戒线，集中为出餐速度问题。', state: '已整改' },
+          { title: '冷库温度波动', level: '重要', desc: '冷库 DEV-COLD-006 温度波动超阈值，已触发食安联动。', state: '待指派' },
+          { title: '网关内存占用过高', level: '重要', desc: '边缘网关 EDGE-GW-06 内存占用超过 90%，为网关自身资源异常。', state: '处理中' }
+        ]
+      },
+      '北苑食堂': {
+        trend: [2320, 2410, 2260, 2480, 2390, 2510, 2460],
+        reserves: [
+          { who: '赵同学', meal: '午餐', slot: '12:00-12:30', num: '5 人', state: '已预约' },
+          { who: '孙老师', meal: '午餐', slot: '11:30-12:00', num: '8 人', state: '已预约' },
+          { who: '周同学', meal: '晚餐', slot: '18:00-18:30', num: '3 人', state: '已预约' },
+          { who: '吴同学', meal: '午餐', slot: '12:30-13:00', num: '2 人', state: '已核销' },
+          { who: '郑同学', meal: '晚餐', slot: '17:30-18:00', num: '6 人', state: '已取消' }
+        ],
+        alerts: [
+          { title: '承包方人员在岗不足', level: '重要', desc: '在岗 28 人低于编制 32 人，缺口集中在面点档口。', state: '待指派' },
+          { title: '库存告急', level: '重要', desc: '冷鲜肉类库存低于安全线，建议 24 小时内补货。', state: '处理中' },
+          { title: '合同履约提醒', level: '一般', desc: '承包合同将于 2027-08-31 到期，请提前安排续签评审。', state: '处理中' }
+        ]
+      }
+    };
+
+    function detailOf(name){
+      return DETAIL[name] || DEFAULT_DETAIL;
+    }
+
+    var drawer = document.getElementById('drawer');
+    var drawerMask = document.getElementById('drawerMask');
+
+    function tag(cls, text){
+      return '<span class="tag ' + cls + '">' + text + '</span>';
+    }
+
+    function openDrawer(card){
+      var d = card.dataset;
+      document.getElementById('drawerTitle').textContent = d.name + ' · 运营下钻';
+      document.getElementById('drawerMode').textContent = d.mode;
+      var statusEl = document.getElementById('drawerStatus');
+      statusEl.textContent = d.status;
+      statusEl.className = 'dot-status ' + (d.status === '营业中' ? 'dot-on' : (d.status === '维护中' ? 'dot-maint' : 'dot-closed'));
+      document.getElementById('drawerGrade').textContent = d.grade;
+
+      drawer.querySelectorAll('[data-field]').forEach(function(el){
+        var key = el.dataset.field;
+        if (key === 'contractState'){
+          el.innerHTML = tag(contractTagClass[d.contractState] || 'tag-gray', d.contractState);
+        } else if (key === 'stockState'){
+          el.innerHTML = tag(stockTagClass[d.stockState] || 'tag-gray', d.stockState);
+        } else if (key === 'disinfection'){
+          el.innerHTML = tag(disinfectionTagClass[d.disinfection] || 'tag-gray', d.disinfection);
+        } else {
+          el.textContent = d[key] || '—';
+        }
+      });
+
+      var detail = detailOf(d.name);
+
+      // 今日预约
+      var reserveBody = document.getElementById('reserveBody');
+      reserveBody.innerHTML = detail.reserves.map(function(r){
+        return '<tr><td>' + r.who + '</td><td>' + r.meal + '</td><td class="num">' + r.slot +
+               '</td><td class="num">' + r.num + '</td><td>' + tag('tag-blue', r.state) + '</td></tr>';
+      }).join('');
+
+      // 近 7 日就餐趋势
+      var max = 2600;
+      document.getElementById('trendBars').innerHTML = detail.trend.map(function(v){
+        return '<div class="bar" style="height:' + Math.round(v / max * 100) + '%"></div>';
+      }).join('');
+      var end = new Date('2026-09-17T00:00:00');
+      var labels = [];
+      for (var i = 6; i >= 0; i--){
+        var dt = new Date(end.getTime() - i * 86400000);
+        labels.push(('0' + (dt.getMonth() + 1)).slice(-2) + '-' + ('0' + dt.getDate()).slice(-2));
+      }
+      document.getElementById('trendX').innerHTML = labels.map(function(t){ return '<span>' + t + '</span>'; }).join('');
+
+      // 未闭环预警
+      document.getElementById('alertList').innerHTML = detail.alerts.map(function(a){
+        return '<div class="alert-item">' +
+                 '<span class="alert-icon">' +
+                   '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+                     '<path d="M12 4.5 3 19.5h18z"/><path d="M12 10v4.5"/><path d="M12 17.3v.1"/></svg>' +
+                 '</span>' +
+                 '<div class="alert-body">' +
+                   '<div class="alert-title-row"><span class="alert-title">' + a.title + '</span>' +
+                     tag(a.level === '重要' ? 'tag-red' : 'tag-gray', a.level) + '</div>' +
+                   '<div class="alert-desc">' + a.desc + '</div>' +
+                 '</div>' +
+                 '<div class="alert-state">' + tag(alertStateTagClass[a.state] || 'tag-gray', a.state) + '</div>' +
+               '</div>';
+      }).join('');
+
+      drawer.classList.add('open');
+      drawerMask.classList.add('open');
+    }
+
+    function closeDrawer(){
+      drawer.classList.remove('open');
+      drawerMask.classList.remove('open');
+    }
+
+    /* ---------- 食堂经理视角 ---------- */
+    function applyRole(){
+      if (ROLE !== 'manager') return;
+      document.body.classList.add('role-manager');
+      document.getElementById('heroTitle').textContent = MANAGER_SCOPE[0] + ' · 运营总览';
+      document.getElementById('heroSub').textContent = '本餐厅实时';
+      document.getElementById('heroTotal').textContent = '1 家';
+      document.getElementById('riskWarn').textContent = '3';
+      document.getElementById('riskRectify').textContent = '1';
+      document.getElementById('riskRepair').textContent = '0';
+      document.getElementById('riskRepairSub').textContent = '待派单 0 · 处理中 0';
+    }
+
+    /* ---------- 事件 ---------- */
+    document.addEventListener('click', function(e){
+      var tab = e.target.closest('.scene-tab');
+      if (tab && !tab.disabled){
+        state.mode = tab.dataset.mode;
+        state.page = 1;
+        applyTabs();
+        renderCards();
+        return;
+      }
+      var pagerBtn = e.target.closest('[data-action="prev"],[data-action="next"]');
+      if (pagerBtn){
+        state.page += (pagerBtn.dataset.action === 'next' ? 1 : -1);
+        renderCards();
+        return;
+      }
+      var card = e.target.closest('.canteen-card');
+      if (card && !e.target.closest('a,button')){
+        openDrawer(card);
+        return;
+      }
+      // 跳转类动作：地址与参数由对方系统提供（待确认清单第 13/14/15 项）
+      var jump = e.target.closest('[data-action="jump"]');
+      if (jump){ return; }
+      if (e.target.closest('[data-action="close"]') || e.target === drawerMask){
+        closeDrawer();
+      }
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape'){ closeDrawer(); }
+    });
+
+    applyRole();
+    applyTabs();
+    renderCards();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+[
+  {
+    "skill_name": "db-docs",
+    "query": "请从本地 SQLite 数据库生成数据库表和字段说明的 JSON schema 与离线 HTML 文档。",
+    "assertions": [
+      {"text": "生成 schema.json、search-index.json、index.html 和按表名/namespace 组织的独立 JSON/HTML", "passed": false, "evidence": "待运行评测"},
+      {"text": "JSON 只包含元数据字段，不包含业务行数据", "passed": false, "evidence": "待运行评测"},
+      {"text": "目录页只内嵌轻量索引，并通过单页路由按需加载表详情", "passed": false, "evidence": "待运行评测"}
+    ]
+  },
+  {
+    "skill_name": "db-docs",
+    "query": "连接 PostgreSQL，选择 public schema，生成数据字典。",
+    "assertions": [
+      {"text": "先测试连接并选择 namespace，再生成文档", "passed": false, "evidence": "待运行评测"},
+      {"text": "重复生成的 JSON 排序稳定且不写入当前时间", "passed": false, "evidence": "待运行评测"},
+      {"text": "不读取业务表中的真实数据", "passed": false, "evidence": "待运行评测"},
+      {"text": "存在基础表和连续日期/数字分表时只保留基础表", "passed": false, "evidence": "待运行评测"}
+    ]
+  }
+]

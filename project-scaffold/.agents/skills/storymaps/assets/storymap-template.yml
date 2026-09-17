@@ -1,0 +1,39 @@
+name: "<map-name>"
+site: storymaps.io
+
+steps:
+  - "<step-1>"
+  - "<step-2>"
+  - "<step-3>"
+
+users:
+  - name: "<user-role>"
+    step: "<step-1>"
+    color: "#fca5a5"
+
+activities:
+  - name: "<activity>"
+    step: "<step-1>"
+    color: "#93c5fd"
+
+legend:
+  - color: "#fef08a"
+    label: Tasks
+  - color: "#a5f3fc"
+    label: Notes
+  - color: "#bef264"
+    label: Questions
+  - color: "#fecdd3"
+    label: Edge cases
+
+slices:
+  - name: "<increment-name>"
+    stories:
+      "<step-1>":
+        - name: "<story-title>"
+          body: "作为一个[XX角色]，我[想要什么]，[以便达到什么目的]。"
+          status: planned
+          points: 1
+          tags:
+            - "<tag>"
+          # 可选：color、url

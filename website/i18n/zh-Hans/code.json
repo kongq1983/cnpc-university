@@ -1,0 +1,14 @@
+{
+  "theme.TOCCollapsible.toggleButtonLabel": {
+    "message": "本页目录",
+    "description": "移动端目录切换按钮文案"
+  },
+  "theme.SearchBar.noResultsText": {
+    "message": "没有找到文档，请尝试更短的关键词，或从核心入口浏览。",
+    "description": "搜索栏无结果提示"
+  },
+  "theme.SearchPage.noResultsText": {
+    "message": "没有找到文档，请尝试更短的关键词，或从核心入口浏览。",
+    "description": "搜索页无结果提示"
+  }
+}

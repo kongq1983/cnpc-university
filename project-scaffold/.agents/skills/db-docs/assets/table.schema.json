@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["version", "engine", "database", "catalog", "schema", "table"],
+  "properties": {
+    "version": {"const": 1},
+    "engine": {"enum": ["mysql", "postgresql", "oracle", "sqlite"]},
+    "database": {"type": ["string", "null"]},
+    "catalog": {"type": ["string", "null"]},
+    "schema": {"type": ["string", "null"]},
+    "table": {
+      "type": "object",
+      "required": ["name", "comment", "columns", "primary_key", "foreign_keys", "unique_constraints", "indexes"],
+      "properties": {
+        "name": {"type": "string"},
+        "comment": {"type": ["string", "null"]},
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "ordinal", "type", "length", "precision", "scale", "nullable", "default", "identity", "comment"],
+            "properties": {
+              "name": {"type": "string"},
+              "ordinal": {"type": "integer", "minimum": 1},
+              "type": {"type": ["string", "null"]},
+              "length": {"type": ["integer", "null"]},
+              "precision": {"type": ["integer", "null"]},
+              "scale": {"type": ["integer", "null"]},
+              "nullable": {"type": "boolean"},
+              "default": {"type": ["string", "number", "boolean", "null"]},
+              "identity": {"type": "boolean"},
+              "comment": {"type": ["string", "null"]}
+            },
+            "additionalProperties": false
+          }
+        },
+        "primary_key": {"type": "array", "items": {"type": "string"}},
+        "foreign_keys": {"type": "array"},
+        "unique_constraints": {"type": "array"},
+        "indexes": {"type": "array"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

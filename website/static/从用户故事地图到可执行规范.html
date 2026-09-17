@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>用户故事地图 → BDD · Gherkin · Feature 文件</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f7f5f0;
+      color: #1e1e1e;
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 32px;
+      box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      padding: 2.5rem 2rem 3rem;
+    }
+
+    /* 总标题 */
+    .hero {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      color: #0b2b3c;
+    }
+
+    .hero .sub {
+      font-size: 1.15rem;
+      color: #4a5f6b;
+      margin-top: 0.6rem;
+      font-weight: 400;
+      max-width: 720px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* 章节标题 */
+    .chapter-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      letter-spacing: -0.01em;
+      margin: 2.5rem 0 0.5rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 3px solid #2d6a8a;
+    }
+
+    .chapter-title .num {
+      color: #2d6a8a;
+      font-weight: 800;
+      margin-right: 0.4rem;
+    }
+
+    /* 大图卡片 */
+    .big-visual {
+      background: #e9f0f5;
+      border-radius: 24px;
+      padding: 2.5rem 2rem;
+      margin: 1.8rem 0 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      border: 1px solid #d0dee7;
+    }
+
+    .visual-icon {
+      font-size: 4.5rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .visual-text {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .visual-text .big-word {
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+    }
+
+    .visual-text .big-desc {
+      font-size: 1.1rem;
+      color: #2d4a5a;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* 内容块 */
+    .content-block {
+      margin: 1.8rem 0 1.6rem;
+    }
+
+    .content-block h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.8rem;
+      border-left: 6px solid #2d6a8a;
+      padding-left: 1rem;
+    }
+
+    .content-block h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      margin: 1.4rem 0 0.5rem;
+    }
+
+    .content-block p {
+      font-size: 1.1rem;
+      color: #2d3e48;
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    /* 高亮引用框 */
+    .highlight-box {
+      background: #fdf6e8;
+      border-radius: 20px;
+      padding: 1.6rem 2rem;
+      margin: 1.6rem 0;
+      border: 1px solid #e6d8bf;
+    }
+
+    .highlight-box p {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #4d3a1a;
+      margin-bottom: 0.5rem;
+    }
+
+    .highlight-box .author {
+      font-size: 0.9rem;
+      font-style: normal;
+      color: #7a6a4a;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    /* 三列卡片 */
+    .three-col {
+      display: flex;
+      gap: 1.2rem;
+      margin: 1.8rem 0;
+      flex-wrap: wrap;
+    }
+
+    .col {
+      flex: 1;
+      min-width: 180px;
+      background: #f2f6f9;
+      border-radius: 20px;
+      padding: 1.6rem 1.2rem;
+      text-align: center;
+      border: 1px solid #d0dee7;
+    }
+
+    .col .col-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .col h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      margin-bottom: 0.4rem;
+    }
+
+    .col p {
+      font-size: 0.9rem;
+      color: #3e5a68;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    /* 分隔线 */
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #cddbe5, transparent);
+      margin: 2.4rem 0 1.8rem;
+    }
+
+    /* 故事地图演示 */
+    .map-demo {
+      background: #f2f6f9;
+      border-radius: 24px;
+      padding: 2rem 1.5rem 1.8rem;
+      margin: 1.8rem 0;
+      border: 1px solid #d0dee7;
+      overflow-x: auto;
+    }
+
+    .map-row {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .map-row:last-child { margin-bottom: 0; }
+
+    .step-box {
+      background: #0b2b3c;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 40px;
+      white-space: nowrap;
+    }
+
+    .step-box.alt { background: #2d6a8a; }
+
+    .story-card {
+      background: #ffe5b4;
+      border-radius: 16px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #3d2a0f;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+
+    .story-card.light {
+      background: #d9e8f0;
+      color: #1b3b4b;
+    }
+
+    .map-label {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #4a6a7a;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+
+    /* 代码块 */
+    .code-block {
+      background: #0f2430;
+      color: #e8f0f5;
+      border-radius: 16px;
+      padding: 1.5rem 1.8rem;
+      margin: 1.4rem 0;
+      overflow-x: auto;
+      font-family: "SF Mono", "Fira Code", "Consolas", monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      border: 1px solid #1a3a4a;
+    }
+
+    .code-block .kw { color: #7ec8e3; font-weight: 600; }
+    .code-block .str { color: #f4d06f; }
+    .code-block .cmt { color: #6a8a9a; font-style: italic; }
+    .code-block .tag { color: #e88a7a; }
+
+    .code-caption {
+      font-size: 0.85rem;
+      color: #5a7a8a;
+      margin-top: 0.3rem;
+      text-align: right;
+      font-weight: 500;
+    }
+
+    /* 流程箭头 */
+    .flow-arrow {
+      text-align: center;
+      font-size: 2rem;
+      color: #2d6a8a;
+      margin: 0.5rem 0;
+      font-weight: 300;
+    }
+
+    /* 双列 */
+    .two-col {
+      display: flex;
+      gap: 1.5rem;
+      margin: 1.6rem 0;
+      flex-wrap: wrap;
+    }
+
+    .two-col .half {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .two-col .half h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #0b2b3c;
+      margin-bottom: 0.4rem;
+    }
+
+    .two-col .half p {
+      font-size: 0.98rem;
+      color: #3e5a68;
+      margin-bottom: 0.6rem;
+    }
+
+    .pill {
+      display: inline-block;
+      background: #0b2b3c;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.7rem;
+      border-radius: 20px;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .pill.orange { background: #b85c2a; }
+    .pill.green { background: #1e6b4a; }
+
+    /* 书籍参考 */
+    .book-ref {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      background: #e9f0f5;
+      border-radius: 20px;
+      padding: 1.4rem 1.8rem;
+      margin: 1.6rem 0;
+      flex-wrap: wrap;
+    }
+
+    .book-ref .book-cover {
+      width: 70px;
+      height: 100px;
+      background: #0b2b3c;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.65rem;
+      text-align: center;
+      padding: 0.4rem;
+      line-height: 1.3;
+      flex-shrink: 0;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .book-ref .book-cover.orange { background: #b85c2a; }
+    .book-ref .book-cover.green { background: #1e6b4a; }
+
+    .book-ref .book-text { flex: 1; }
+    .book-ref .book-text strong {
+      font-size: 1.05rem;
+      color: #0b2b3c;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+    .book-ref .book-text span {
+      font-size: 0.9rem;
+      color: #3e5a68;
+    }
+
+    /* 收尾 */
+    .footer-quote {
+      text-align: center;
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e0e8ee;
+    }
+
+    .footer-quote p {
+      font-size: 1.05rem;
+      color: #2d4a5a;
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      .page { padding: 1.5rem 1rem 2rem; }
+      .hero h1 { font-size: 1.8rem; }
+      .hero .sub { font-size: 1rem; }
+      .chapter-title { font-size: 1.6rem; }
+      .big-visual { flex-direction: column; text-align: center; padding: 1.5rem 1rem; }
+      .visual-text .big-word { font-size: 1.5rem; }
+      .visual-text .big-desc { font-size: 0.95rem; }
+      .content-block h2 { font-size: 1.4rem; }
+      .content-block p { font-size: 1rem; }
+      .code-block { font-size: 0.75rem; padding: 1rem; }
+      .book-ref { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ========== 总标题 ========== -->
+    <div class="hero">
+      <h1>从用户故事地图到可执行规范</h1>
+      <div class="sub">
+        一张图看见全局，一套语言精准落地。<br>
+        用户故事地图 · BDD · Gherkin · Feature 文件
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第一章：用户故事地图                                           -->
+    <!-- ============================================================ -->
+    <h2 class="chapter-title"><span class="num">01</span> 用户故事地图</h2>
+
+    <!-- 痛点大图 -->
+    <div class="big-visual">
+      <div class="visual-icon">🧩</div>
+      <div class="visual-text">
+        <div class="big-word">痛点：需求列表像一根长长的绳子</div>
+        <div class="big-desc">
+          敏捷团队通常把需求写成“用户故事”，塞进一个清单里。<br>
+          时间一长，清单变成几百条，<strong>只见树木，不见森林</strong>——没人说得清这些碎片合起来到底是个什么样的产品。
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <p>《用户故事地图》的作者 <strong>Jeff Patton</strong> 说，问题出在：我们把用户故事当成了“要完成的任务”，而不是“用户的一段旅程”。于是，他提出了一个简单却强大的方法——<strong>把故事摊开，画成一张地图</strong>。</p>
+    </div>
+
+    <!-- 地图示例 -->
+    <div class="map-demo">
+      <div style="text-align:center; margin-bottom: 1.4rem;">
+        <span style="font-size:1rem; font-weight:600; color:#0b2b3c;">📌 一张用户故事地图的样子（以“在线购物”为例）</span>
+      </div>
+      <div class="map-row">
+        <span class="step-box">浏览商品</span>
+        <span class="step-box alt">加入购物车</span>
+        <span class="step-box">结算付款</span>
+        <span class="step-box alt">收货</span>
+        <span class="step-box">评价</span>
+      </div>
+      <div class="map-row">
+        <span class="story-card">搜索商品</span>
+        <span class="story-card light">修改数量</span>
+        <span class="story-card">选择地址</span>
+        <span class="story-card light">查看物流</span>
+        <span class="story-card">打分</span>
+      </div>
+      <div class="map-row">
+        <span class="story-card">按分类筛选</span>
+        <span class="story-card light">删除商品</span>
+        <span class="story-card">使用优惠券</span>
+        <span class="story-card light">确认收货</span>
+        <span class="story-card">写评论</span>
+      </div>
+      <div class="map-label">← 横轴：用户旅程（从左到右） · 纵轴：优先级（从上到下）→</div>
+    </div>
+
+    <div class="content-block">
+      <p><strong>横着看</strong>，它是用户从开始到结束的完整旅程——这叫“主干”或“骨架”。<strong>竖着看</strong>，每个步骤下面挂着大小不一的用户故事，越往上优先级越高、越先做。</p>
+      <p>Patton 在书里反复强调一句话：<strong>故事地图的重点不是图本身，而是画图过程中的对话。</strong></p>
+    </div>
+
+    <!-- 三个关键提醒 -->
+    <div class="content-block">
+      <h2>《用户故事地图》的三个关键提醒</h2>
+    </div>
+
+    <div class="three-col">
+      <div class="col">
+        <span class="col-icon">💬</span>
+        <h3>故事是对话，不是文档</h3>
+        <p>用户故事不是用来“写需求”的，而是用来“引发讨论”的。地图的价值在于大家围着它聊出了共识。</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">🗺️</span>
+        <h3>先看全局，再切版本</h3>
+        <p>整张地图是产品的全貌。横向切一刀，就是一个可以交付的最小可用版本（MVP）。</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">🧠</span>
+        <h3>避免“清单思维”</h3>
+        <p>一张扁平的待办清单会让人只盯着下一条任务。地图用空间结构强迫团队思考上下文。</p>
+      </div>
+    </div>
+
+    <!-- 诞生小故事 -->
+    <div class="highlight-box">
+      <p>“用户故事地图是在一次偶然中诞生的——Jeff Patton 的朋友创业做产品，迟迟发不了版。Patton 拉着朋友坐在地板上，让他描述用户会怎么用这个产品，一边听一边写卡片，按时间顺序排在地上。两个小时后，地板上铺满了一整张故事地图。”</p>
+      <div class="author">—— 这个故事记录在《用户故事地图》一书里</div>
+    </div>
+
+    <!-- 三步法 -->
+    <div class="content-block">
+      <h2>如果你想试一次，只需要三步</h2>
+    </div>
+
+    <div class="big-visual" style="background:#f6f0e8; border-color:#e6d8bf;">
+      <div class="visual-text" style="text-align:left;">
+        <div style="display:flex; flex-wrap:wrap; gap:1.5rem; justify-content:center;">
+          <div style="flex:1; min-width:180px;">
+            <div style="font-size:1.6rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">① 讲一遍旅程</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">让一个人从头到尾讲一遍“用户会怎么用”，其他人先别打断，听完。</p>
+          </div>
+          <div style="flex:1; min-width:180px;">
+            <div style="font-size:1.6rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">② 摆卡片</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">用便签写下每个步骤和故事，贴在一面大墙或白板上。物理卡片比软件好——因为可以随手挪。</p>
+          </div>
+          <div style="flex:1; min-width:180px;">
+            <div style="font-size:1.6rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">③ 横切版本</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">沿着纵轴切一刀：上面那一刀是做第一版必须有的，下面那一刀可以以后再说。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 过渡：从地图到 BDD -->
+    <div class="divider"></div>
+
+    <div class="big-visual" style="background:#eaf3f7; border-color:#c0d8e4;">
+      <div class="visual-icon">🔗</div>
+      <div class="visual-text">
+        <div class="big-word">地图回答了“做什么”，但还没回答“做到什么程度算完成”</div>
+        <div class="big-desc">
+          地图上的卡片是“用户故事”。到了开发团队手里，还需要一个东西来回答：<br>
+          <strong>“这个功能具体要表现出什么行为？怎么验证它做对了？”</strong><br>
+          这就是 <strong>BDD、Gherkin 和 Feature 文件</strong> 登场的地方。
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 第二章：BDD · Gherkin · Feature 文件                          -->
+    <!-- ============================================================ -->
+    <h2 class="chapter-title"><span class="num">02</span> BDD · Gherkin · Feature 文件</h2>
+
+    <div class="content-block">
+      <p>BDD（行为驱动开发）用一套叫 <strong>Gherkin</strong> 的“半自然语言”，把地图上的用户故事翻译成具体的、可执行的验收场景，写在 <strong>Feature 文件</strong> 里。这三者连在一起，就形成了一条从“看见全局”到“精准落地”的链条。</p>
+    </div>
+
+    <!-- 用地图定位一个具体故事 -->
+    <div class="map-demo">
+      <div style="text-align:center; margin-bottom: 1.4rem;">
+        <span style="font-size:1rem; font-weight:600; color:#0b2b3c;">📌 回到地图 —— 聚焦“结算付款”下的“使用优惠券”</span>
+      </div>
+      <div class="map-row">
+        <span class="step-box">浏览商品</span>
+        <span class="step-box alt">加入购物车</span>
+        <span class="step-box" style="background:#b85c2a; box-shadow: 0 0 0 3px #ffe5b4;">结算付款 ← 当前聚焦</span>
+        <span class="step-box alt">收货</span>
+        <span class="step-box">评价</span>
+      </div>
+      <div class="map-row">
+        <span class="story-card">搜索商品</span>
+        <span class="story-card light">修改数量</span>
+        <span class="story-card" style="background:#b85c2a; color:#fff;">使用优惠券</span>
+        <span class="story-card light">查看物流</span>
+        <span class="story-card">打分</span>
+      </div>
+      <div class="map-row">
+        <span class="story-card">按分类筛选</span>
+        <span class="story-card light">删除商品</span>
+        <span class="story-card" style="background:#b85c2a; color:#fff;">选择收货地址</span>
+        <span class="story-card light">确认收货</span>
+        <span class="story-card">写评论</span>
+      </div>
+      <div class="map-label">← 横轴：用户旅程 · 纵轴：优先级（上高下低）→</div>
+    </div>
+
+    <div class="content-block">
+      <p>假设团队决定先做“<strong>使用优惠券</strong>”这个用户故事。按照经典的用户故事格式，它可能是这样的：</p>
+    </div>
+
+    <div class="code-block">
+      <span class="cmt"># 用户故事：使用优惠券</span><br>
+      <span class="kw">作为</span> 一位在线购物的顾客，<br>
+      <span class="kw">我想要</span> 在结算时输入优惠码，<br>
+      <span class="kw">以便</span> 获得折扣，花更少的钱买到商品。
+    </div>
+
+    <div class="content-block">
+      <p>这个描述很清楚，但它还不够——<strong>“输入优惠码”到底要处理哪些情况？过期券怎么办？无效券怎么办？一个订单能用几张？</strong> 这些细节，就是 BDD 和 Gherkin 要解决的问题。</p>
+    </div>
+
+    <!-- 三个核心概念 -->
+    <div class="content-block">
+      <h2>三个核心概念，一句话说清</h2>
+    </div>
+
+    <div class="three-col">
+      <div class="col">
+        <span class="col-icon">🤝</span>
+        <h3>BDD 是什么</h3>
+        <p>一种<strong>协作方法</strong>。让业务、开发和测试坐在一起，用具体例子讨论“系统应该表现出什么行为”。由 Dan North 于 2006 年提出。</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">📝</span>
+        <h3>Gherkin 是什么</h3>
+        <p>BDD 使用的<strong>语言格式</strong>。用 Given / When / Then 三个关键词，把对话结果写成人和机器都能读的场景。Cucumber、SpecFlow、Behave 等工具都支持它。</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">📄</span>
+        <h3>Feature 文件是什么</h3>
+        <p>用 Gherkin 写出来的<strong>文件</strong>，扩展名是 <code>.feature</code>。它既是需求文档，也是自动化测试的输入。</p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>“BDD 首先专注于能够交付业务价值的特性，然后通过具体的实例——也就是场景——来确保团队对需求有一致的理解。”</p>
+      <div class="author">—— John Ferguson Smart，《BDD In Action》作者</div>
+    </div>
+
+    <!-- Gherkin 语法 -->
+    <div class="content-block">
+      <h2>Gherkin 的五种关键词，像讲故事一样写需求</h2>
+    </div>
+
+    <div class="content-block">
+      <p>Gherkin 的语法非常精简。你只需要记住五个词，就能把任何一个用户故事展开成完整的行为规范：</p>
+    </div>
+
+    <div class="code-block">
+      <span class="cmt"># Feature：功能标题（对应一个用户故事或功能组）</span><br>
+      <span class="kw">Feature:</span> 使用优惠券<br><br>
+
+      <span class="cmt"># Background：所有场景共用的前置条件（可选）</span><br>
+      <span class="kw">Background:</span><br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客已登录<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 购物车中已有商品<br><br>
+
+      <span class="cmt"># Scenario：一个具体的场景（一条路径）</span><br>
+      <span class="kw">Scenario:</span> 使用有效的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客有一张有效的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">When</span> 顾客在结算时输入优惠码<br>
+      &nbsp;&nbsp;<span class="kw">Then</span> 订单总价应减少相应折扣<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 页面应显示折扣金额<br>
+    </div>
+
+    <div class="two-col">
+      <div class="half">
+        <span class="pill">Given</span>
+        <h3>前置条件</h3>
+        <p>描述场景开始时的系统状态。“世界在故事开始前是什么样子？”<br>例：<em>顾客已登录、购物车中已有商品</em></p>
+      </div>
+      <div class="half">
+        <span class="pill orange">When</span>
+        <h3>动作</h3>
+        <p>描述触发行为的关键操作。一个场景通常只有<strong>一个</strong> When——如果有多个动作，应该拆成多个场景。<br>例：<em>顾客输入优惠码</em></p>
+      </div>
+      <div class="half">
+        <span class="pill green">Then</span>
+        <h3>预期结果</h3>
+        <p>描述可观察到的结果。必须是外部可观测的，而不是内部状态。<br>例：<em>订单总价减少、页面显示折扣</em></p>
+      </div>
+      <div class="half">
+        <span class="pill">And / But</span>
+        <h3>延续上一步</h3>
+        <p>用来延续前面的 Given、When 或 Then，让场景读起来更自然。<br>例：<em>And 页面应显示折扣金额</em></p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>“用陈述式，不要用命令式——写‘用户登录’，而不是‘用户点击了坐标 (350, 480) 的按钮’。”</p>
+      <div class="author">—— Cucumber 官方最佳实践指南</div>
+    </div>
+
+    <!-- 完整 Feature 文件 -->
+    <div class="content-block">
+      <h2>完整的 Feature 文件：一个用户故事的“全貌”</h2>
+    </div>
+
+    <div class="content-block">
+      <p>把“使用优惠券”这个故事展开，一个完整的 <code>.feature</code> 文件长这样——它覆盖了正常路径和几个关键边界情况：</p>
+    </div>
+
+    <div class="code-block">
+      <span class="cmt"># coupon.feature</span><br><br>
+      <span class="kw">Feature:</span> 使用优惠券<br>
+      &nbsp;&nbsp;<span class="kw">作为</span> 一位在线购物的顾客<br>
+      &nbsp;&nbsp;<span class="kw">我想要</span> 在结算时输入优惠码<br>
+      &nbsp;&nbsp;<span class="kw">以便</span> 获得折扣<br><br>
+
+      <span class="kw">Background:</span><br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客已登录<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 购物车中有商品“无线耳机”<br><br>
+
+      <span class="kw">Scenario:</span> 使用有效的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客有一张“满100减10”的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">When</span> 顾客在结算时输入该优惠码<br>
+      &nbsp;&nbsp;<span class="kw">Then</span> 订单总价应减少10元<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 页面应显示“已优惠10元”<br><br>
+
+      <span class="kw">Scenario:</span> 优惠券已过期<br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客有一张已过期的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">When</span> 顾客在结算时输入该优惠码<br>
+      &nbsp;&nbsp;<span class="kw">Then</span> 页面应显示“该优惠券已过期”<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 订单总价不变<br><br>
+
+      <span class="kw">Scenario:</span> 优惠码无效<br>
+      &nbsp;&nbsp;<span class="kw">When</span> 顾客输入一个不存在的优惠码<br>
+      &nbsp;&nbsp;<span class="kw">Then</span> 页面应显示“无效的优惠码”<br>
+    </div>
+    <div class="code-caption">↑ 每一个 Scenario 就是一条可独立验证的验收标准</div>
+
+    <div class="content-block">
+      <p>注意这个文件的结构：<strong>Feature 的标题和描述</strong>直接对应地图上的用户故事；<strong>Background</strong> 把多个场景共用的前置条件抽出来；<strong>三个 Scenario</strong> 分别覆盖了正常路径、过期券和无效券——这三个场景合在一起，才完整定义了“使用优惠券”这个故事的验收标准。</p>
+    </div>
+
+    <!-- Scenario Outline -->
+    <div class="content-block">
+      <h2>进阶：Scenario Outline——当同一场景有很多组数据</h2>
+    </div>
+
+    <div class="content-block">
+      <p>如果优惠券有多种面额，与其复制粘贴多个几乎一样的场景，不如用 <strong>Scenario Outline + Examples</strong> 来一次搞定：</p>
+    </div>
+
+    <div class="code-block">
+      <span class="kw">Scenario Outline:</span> 不同面额的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">Given</span> 顾客有一张面额为 &lt;面额&gt; 的优惠券<br>
+      &nbsp;&nbsp;<span class="kw">And</span> 订单原价为 &lt;原价&gt; 元<br>
+      &nbsp;&nbsp;<span class="kw">When</span> 顾客使用该优惠券<br>
+      &nbsp;&nbsp;<span class="kw">Then</span> 订单总价应变为 &lt;最终价&gt; 元<br><br>
+
+      <span class="kw">Examples:</span><br>
+      &nbsp;&nbsp;| 面额&nbsp;&nbsp;| 原价&nbsp;&nbsp;| 最终价 |<br>
+      &nbsp;&nbsp;| 10元&nbsp;&nbsp;| 100元 | 90元&nbsp;&nbsp;|<br>
+      &nbsp;&nbsp;| 30元&nbsp;&nbsp;| 200元 | 170元 |<br>
+      &nbsp;&nbsp;| 50元&nbsp;&nbsp;| 100元 | 50元&nbsp;&nbsp;|
+    </div>
+    <div class="code-caption">↑ Examples 表格中的每一行都会生成一个独立的测试用例</div>
+
+    <div class="content-block">
+      <p>这样写的好处是：<strong>场景逻辑只写一遍</strong>，数据的变化通过表格管理，既清晰又不容易漏掉边界值。</p>
+    </div>
+
+    <!-- BDD 工作流 -->
+    <div class="divider"></div>
+
+    <div class="content-block">
+      <h2>BDD 的完整工作流：从对话到自动化</h2>
+    </div>
+
+    <div class="big-visual" style="background:#f6f0e8; border-color:#e6d8bf;">
+      <div class="visual-text" style="text-align:left;">
+        <div style="display:flex; flex-wrap:wrap; gap:1.2rem; justify-content:center;">
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:1.5rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">① 发现</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">业务、开发、测试坐在一起（“三剑客”会议），围绕地图上的用户故事讨论具体例子。<strong>这一步最重要。</strong></p>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:1.5rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">② 表述</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">把讨论结果用 Gherkin 写成 Feature 文件。<strong>不是在写文档，而是在记录共识。</strong></p>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:1.5rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">③ 自动化</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">为每个 Gherkin 步骤编写自动化代码（Step Definition），让场景变成可运行的测试。</p>
+          </div>
+          <div style="flex:1; min-width:160px;">
+            <div style="font-size:1.5rem; font-weight:700; color:#0b2b3c; margin-bottom:0.2rem;">④ 实现</div>
+            <p style="font-size:0.95rem; color:#3e5a68;">编写产品代码，让场景通过。<strong>先写场景，再写代码</strong>——这是 BDD 区别于传统开发的关键。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <p>“BDD 场景在代码写完之前就写好了。只有当一个场景通过，意味着所有人对你说的话都达成了一致，你才能开始实现。”</p>
+      <div class="author">—— Cucumber 官方反模式指南</div>
+    </div>
+
+    <!-- 实践中的坑 -->
+    <div class="content-block">
+      <h2>实践中的四个大坑（以及怎么避开）</h2>
+    </div>
+
+    <div class="three-col">
+      <div class="col" style="background:#fdf0e8; border-color:#e8d0c0;">
+        <span class="col-icon">🕳️</span>
+        <h3>把场景写成 UI 脚本</h3>
+        <p>“点击按钮”“输入框填入”——这些是<strong>实现细节</strong>，不是行为。好的 Gherkin 描述的是<strong>业务结果</strong>。</p>
+      </div>
+      <div class="col" style="background:#fdf0e8; border-color:#e8d0c0;">
+        <span class="col-icon">🕳️</span>
+        <h3>一个场景塞太多行为</h3>
+        <p>“注册 + 登录 + 改密码 + 下单”——一个场景只测<strong>一条路径</strong>。超过 5–7 步，大概率需要拆开。</p>
+      </div>
+      <div class="col" style="background:#fdf0e8; border-color:#e8d0c0;">
+        <span class="col-icon">🕳️</span>
+        <h3>写完代码再补场景</h3>
+        <p>如果场景是在代码之后写的，它就不再是“共识的记录”，而变成了“事后解释”。<strong>先讨论，再写场景，最后写代码</strong>。</p>
+      </div>
+      <div class="col" style="background:#fdf0e8; border-color:#e8d0c0;">
+        <span class="col-icon">🕳️</span>
+        <h3>场景之间互相依赖</h3>
+        <p>“上一个场景创建了订单 #12345，这个场景来查看它”——这会让测试脆弱且难以并行。<strong>每个场景自己准备数据</strong>。</p>
+      </div>
+    </div>
+
+    <!-- 回到地图：一条线上的珍珠 -->
+    <div class="divider"></div>
+
+    <div class="content-block">
+      <h2>回到地图：它们是一条线上的珍珠</h2>
+    </div>
+
+    <div class="content-block">
+      <p>用户故事地图和 BDD / Gherkin / Feature 文件，不是两件事，而是同一条工作流上的不同环节：</p>
+    </div>
+
+    <div class="big-visual" style="background:#eaf3f7; border-color:#c0d8e4;">
+      <div class="visual-text">
+        <div style="display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; align-items:center;">
+          <div style="background:#0b2b3c; color:#fff; padding:0.8rem 1.2rem; border-radius:14px; text-align:center; min-width:130px;">
+            <div style="font-size:1.5rem;">🗺️</div>
+            <div style="font-weight:700; font-size:0.95rem;">故事地图</div>
+            <div style="font-size:0.8rem; opacity:0.8;">看见全局</div>
+          </div>
+          <div style="font-size:1.5rem; color:#2d6a8a;">→</div>
+          <div style="background:#2d6a8a; color:#fff; padding:0.8rem 1.2rem; border-radius:14px; text-align:center; min-width:130px;">
+            <div style="font-size:1.5rem;">🤝</div>
+            <div style="font-weight:700; font-size:0.95rem;">BDD 对话</div>
+            <div style="font-size:0.8rem; opacity:0.8;">建立共识</div>
+          </div>
+          <div style="font-size:1.5rem; color:#2d6a8a;">→</div>
+          <div style="background:#b85c2a; color:#fff; padding:0.8rem 1.2rem; border-radius:14px; text-align:center; min-width:130px;">
+            <div style="font-size:1.5rem;">📝</div>
+            <div style="font-weight:700; font-size:0.95rem;">Gherkin 场景</div>
+            <div style="font-size:0.8rem; opacity:0.8;">记录行为</div>
+          </div>
+          <div style="font-size:1.5rem; color:#2d6a8a;">→</div>
+          <div style="background:#1e6b4a; color:#fff; padding:0.8rem 1.2rem; border-radius:14px; text-align:center; min-width:130px;">
+            <div style="font-size:1.5rem;">📄</div>
+            <div style="font-weight:700; font-size:0.95rem;">Feature 文件</div>
+            <div style="font-size:0.8rem; opacity:0.8;">可执行规范</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block">
+      <p><strong>地图回答“我们要做什么”和“先做什么”</strong>——它是全局的、可视的、用于规划和沟通的。</p>
+      <p><strong>Feature 文件回答“这个功能具体要表现出什么行为”和“怎么验证它做对了”</strong>——它是局部的、精确的、可执行的。地图上的每一张故事卡片，都可以展开成一个或多个 Feature 文件（或者一个 Feature 文件中的多个 Scenario）。</p>
+    </div>
+
+    <div class="highlight-box">
+      <p>“用户故事是一个关于对话的承诺。地图让这场对话有了全局的上下文，而 Gherkin 让这场对话有了精确的记录。”</p>
+      <div class="author">—— 综合《用户故事地图》与 BDD 实践</div>
+    </div>
+
+    <!-- 书籍参考 -->
+    <div class="divider"></div>
+
+    <div class="content-block">
+      <h2>想深入了解，读这几本书</h2>
+    </div>
+
+    <div class="book-ref">
+      <div class="book-cover">USER<br>STORY<br>MAPPING</div>
+      <div class="book-text">
+        <strong>《用户故事地图》</strong>
+        <span>Jeff Patton 著 · 2014<br>故事地图的奠基之作。核心主张：用可视化地图把用户故事放回用户旅程的上下文里，让团队在对话中建立共识。</span>
+      </div>
+    </div>
+
+    <div class="book-ref">
+      <div class="book-cover orange">BDD<br>IN<br>ACTION</div>
+      <div class="book-text">
+        <strong>《BDD In Action》（第二版）</strong>
+        <span>John Ferguson Smart 著 · 2023<br>系统性地覆盖了 BDD 的完整生命周期：从需求分析到自动化验收测试，再到活文档和持续交付。包含大量实战示例。</span>
+      </div>
+    </div>
+
+    <div class="book-ref">
+      <div class="book-cover green">SPEC<br>BY<br>EXAMPLE</div>
+      <div class="book-text">
+        <strong>《实例化需求》</strong>
+        <span>Gojko Adzic 著 · 2011<br>BDD 的理论基础之一。核心观点：用具体示例来定义需求，让需求、开发和测试共享同一套可验证的场景，从而消除歧义。</span>
+      </div>
+    </div>
+
+    <!-- 最终收尾 -->
+    <div class="footer-quote">
+      <p>地图让你看见整片森林，Gherkin 让你看清每一棵树的纹理。</p>
+    </div>
+
+  </div>
+</body>
+</html>

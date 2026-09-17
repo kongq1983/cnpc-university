@@ -1,0 +1,130 @@
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 56px 32px 88px;
+}
+
+.header {
+  max-width: 640px;
+  margin-bottom: 40px;
+}
+
+.kicker {
+  color: var(--ifm-color-primary);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 12px;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.header p:last-child {
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.75;
+}
+
+.timeline {
+  display: grid;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.timeline::before {
+  background: var(--ifm-color-emphasis-200);
+  bottom: 24px;
+  content: '';
+  left: 23px;
+  position: absolute;
+  top: 24px;
+  width: 2px;
+}
+
+.item {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 48px minmax(0, 1fr);
+}
+
+.marker {
+  align-items: center;
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: 50%;
+  color: var(--ifm-color-primary);
+  display: flex;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.8rem;
+  font-weight: 700;
+  height: 48px;
+  justify-content: center;
+  width: 48px;
+  z-index: 1;
+}
+
+.card {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.status {
+  color: var(--ifm-color-primary);
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.status::before {
+  background: var(--ifm-color-primary);
+  border-radius: 50%;
+  content: '';
+  height: 6px;
+  margin-right: 6px;
+  width: 6px;
+}
+
+.card h2 {
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.empty {
+  color: var(--ifm-color-emphasis-600);
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding: 40px 20px 64px;
+  }
+
+  .timeline::before {
+    left: 19px;
+  }
+
+  .item {
+    gap: 16px;
+    grid-template-columns: 40px minmax(0, 1fr);
+  }
+
+  .marker {
+    height: 40px;
+    width: 40px;
+  }
+}

@@ -1,0 +1,153 @@
+.page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 48px 32px 80px;
+}
+
+.intro {
+  max-width: 780px;
+  border-left: 3px solid var(--ifm-color-primary);
+  padding-left: 28px;
+}
+
+.kicker,
+.entryEyebrow,
+.sectionKicker {
+  color: var(--ifm-color-primary);
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin: 0 0 14px;
+}
+
+.intro h1 {
+  color: var(--ifm-heading-color);
+  font-size: 3.25rem;
+  line-height: 1.12;
+  margin: 0;
+  max-width: 760px;
+}
+
+.lede {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.08rem;
+  line-height: 1.85;
+  margin: 24px 0 0;
+  max-width: 680px;
+}
+
+.entrySection {
+  margin-top: 44px;
+}
+
+.sectionHeading {
+  align-items: baseline;
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.sectionKicker {
+  margin: 0;
+}
+
+.sectionHeading h2 {
+  font-size: 1.45rem;
+  margin: 0;
+}
+
+.roleEntries,
+.startEntries {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.entry {
+  background: var(--ifm-card-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 6px;
+  color: inherit;
+  min-height: 120px;
+  padding: 20px;
+  position: relative;
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.entry:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 8px 22px rgb(15 23 42 / 9%);
+  color: inherit;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.entry h3 {
+  font-size: 1.25rem;
+  margin: 0 0 12px;
+}
+
+.entry p {
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.entryArrow {
+  bottom: 16px;
+  color: var(--ifm-color-primary);
+  font-size: 1.25rem;
+  position: absolute;
+  right: 18px;
+}
+
+.statusBar {
+  align-items: center;
+  color: var(--ifm-color-emphasis-600);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.statusBar strong {
+  color: var(--ifm-heading-color);
+  font-size: 1.1rem;
+}
+
+.statusDivider {
+  background: var(--ifm-color-emphasis-300);
+  height: 18px;
+  margin: 0 8px;
+  width: 1px;
+}
+
+@media (max-width: 800px) {
+  .page {
+    padding: 48px 20px 72px;
+  }
+
+  .intro {
+    padding-left: 20px;
+  }
+
+  .intro h1 {
+    font-size: 2.25rem;
+  }
+
+  .entrySection {
+    margin-top: 48px;
+  }
+
+  .roleEntries,
+  .startEntries {
+    grid-template-columns: 1fr;
+  }
+
+  .entry {
+    min-height: 156px;
+  }
+}
