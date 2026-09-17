@@ -78,9 +78,10 @@
     background:var(--danger);border:1px solid var(--surface);
   }
   .account{
-    width:28px;height:28px;border-radius:50%;background:var(--table-header);border:1px solid var(--border-control);
+    width:28px;height:28px;padding:0;border-radius:50%;background:var(--table-header);border:1px solid var(--border-control);
     display:flex;align-items:center;justify-content:center;color:var(--text-secondary);cursor:pointer;
   }
+  .account:hover{background:var(--primary-subtle);color:var(--primary);}
 
   /* ---------- Secondary Navigation 42px ---------- */
   .sub-nav{
@@ -180,6 +181,8 @@
     background:var(--surface);border:1px solid var(--border-container);border-radius:10px;
     padding:16px 20px;display:flex;align-items:center;gap:12px;
   }
+  .kpi-card.is-clickable{cursor:pointer;transition:border-color .15s;}
+  .kpi-card.is-clickable:hover{border-color:var(--primary-tint-strong);}
   .kpi-icon{
     width:40px;height:40px;flex:0 0 40px;border-radius:8px;
     display:flex;align-items:center;justify-content:center;
@@ -321,6 +324,52 @@
   .alert-title{font-size:13px;font-weight:600;color:var(--text-primary);}
   .alert-desc{font-size:12px;color:var(--text-secondary);margin-top:4px;}
   .alert-state{flex:0 0 auto;}
+
+  /* ---------- 平台账户弹窗（居中弹窗：管理容器 10px） ---------- */
+  .modal-mask{
+    position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;
+    align-items:flex-start;justify-content:center;padding:80px 20px 40px;z-index:70;
+  }
+  .modal-mask.open{display:flex;}
+  .modal{
+    width:960px;max-width:100%;background:var(--surface);border:1px solid var(--border-container);
+    border-radius:10px;padding:20px;box-shadow:0 8px 24px rgba(15,23,42,.12);
+  }
+  .modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;}
+  .modal-title{margin:0;font-size:16px;font-weight:700;color:var(--text-primary);}
+  .modal-close{
+    width:28px;height:28px;border:0;background:transparent;border-radius:6px;color:var(--text-secondary);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .modal-close:hover{background:var(--table-header);}
+  .modal-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;}
+  .modal-note{font-size:12px;color:var(--text-secondary);}
+  .acct-filter{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px;}
+  .input,.select{
+    height:32px;border:1px solid var(--border-control);border-radius:6px;background:var(--surface);
+    font-size:13px;color:var(--text-primary);font-family:inherit;
+  }
+  .input{padding:0 10px;width:200px;}
+  .select{padding:0 8px;min-width:140px;}
+  .input:focus,.select:focus{outline:none;border-color:#60a5fa;}
+  .input-search{
+    height:32px;width:260px;display:flex;align-items:center;gap:8px;padding:0 10px;
+    border:1px solid var(--border-control);border-radius:6px;background:var(--surface);color:var(--text-muted);
+  }
+  .input-search input{
+    border:0;background:transparent;outline:none;width:100%;font-size:13px;
+    font-family:inherit;color:var(--text-primary);
+  }
+  .input-search input::placeholder{color:var(--text-muted);}
+  .user-cell{display:flex;align-items:center;gap:10px;}
+  .avatar{
+    width:28px;height:28px;flex:0 0 28px;border-radius:50%;background:var(--table-header);
+    color:var(--text-secondary);display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:500;
+  }
+  .user-meta{display:flex;flex-direction:column;min-width:0;}
+  .user-name{font-size:13px;color:var(--text-primary);white-space:nowrap;}
+  .user-account{font-size:12px;color:var(--text-muted);}
 
   /* ---------- Footer ---------- */
   .footer{
@@ -689,7 +738,7 @@
   <section class="section" id="runStatus">
     <h2 class="section-title">平台运行状态</h2>
     <div class="kpi-grid">
-      <div class="kpi-card">
+      <div class="kpi-card is-clickable" data-action="open-accounts" role="button" tabindex="0" aria-label="查看平台用户明细">
         <span class="kpi-icon blue">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="9" cy="8.5" r="3.2"/><path d="M3 20c0-3 2.7-5.4 6-5.4S15 17 15 20"/><path d="M16.5 6.2a3 3 0 0 1 0 5.6"/><path d="M18 14.8c2 .8 3.4 2.6 3.4 5.2"/>
@@ -697,8 +746,8 @@
         </span>
         <div class="kpi-body">
           <div class="kpi-label">平台用户</div>
-          <div class="kpi-value" id="kpiUser">21</div>
-          <div class="kpi-sub">启用账号 21 · 角色 2</div>
+          <div class="kpi-value" id="kpiUser">8</div>
+          <div class="kpi-sub">启用账号 8 · 角色 4</div>
         </div>
       </div>
       <div class="kpi-card">
@@ -892,7 +941,7 @@
         <span>卫生等级 <b id="drawerGrade">—</b></span>
       </p>
     </div>
-    <button class="drawer-close" type="button" data-action="close" aria-label="关闭">
+    <button class="drawer-close" type="button" data-action="close-drawer" aria-label="关闭">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
         <path d="M6 6l12 12M18 6L6 18"/>
       </svg>
@@ -945,9 +994,130 @@
   </div>
 
   <div class="drawer-head" style="border-bottom:0;border-top:1px solid var(--border-row);justify-content:flex-end;">
-    <button class="btn btn-secondary-filter" type="button" data-action="close">关闭</button>
+    <button class="btn btn-secondary-filter" type="button" data-action="close-drawer">关闭</button>
   </div>
 </aside>
+
+<!-- 平台账户弹窗 -->
+<div class="modal-mask" id="acctMask">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="acctTitle">
+    <div class="modal-head">
+      <h2 class="modal-title" id="acctTitle">平台用户</h2>
+      <button class="modal-close" type="button" data-action="close-accounts" aria-label="关闭">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="acct-filter">
+      <div class="input-search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>
+        </svg>
+        <input type="text" placeholder="搜索姓名 / 账号">
+      </div>
+      <select class="select">
+        <option>全部角色</option>
+        <option>后勤主任</option>
+        <option>食堂经理</option>
+        <option>采购员</option>
+        <option>运维人员</option>
+      </select>
+      <select class="select">
+        <option>全部状态</option>
+        <option>启用</option>
+        <option>停用</option>
+      </select>
+    </div>
+
+    <div class="sub-table">
+      <table>
+        <thead>
+          <tr>
+            <th>用户</th>
+            <th>角色</th>
+            <th>所属组织</th>
+            <th>联系电话</th>
+            <th>最近登录</th>
+            <th>状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">系</span><span class="user-meta"><span class="user-name">系统管理员</span><span class="user-account">admin</span></span></div></td>
+            <td><span class="tag tag-blue">运维人员</span></td>
+            <td>正元智慧大学餐饮集团</td>
+            <td class="num">13900000001</td>
+            <td class="num">2026-09-17 15:36:49</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">刘</span><span class="user-meta"><span class="user-name">刘运维</span><span class="user-account">ops</span></span></div></td>
+            <td><span class="tag tag-blue">运维人员</span></td>
+            <td>正元智慧大学餐饮集团</td>
+            <td class="num">13900000002</td>
+            <td class="num">2026-08-03 07:55</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">陈</span><span class="user-meta"><span class="user-name">陈志远</span><span class="user-account">chen</span></span></div></td>
+            <td><span class="tag tag-blue">食堂经理</span></td>
+            <td>南苑食堂</td>
+            <td class="num">13900000003</td>
+            <td class="num">2026-08-03 08:30</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">张</span><span class="user-meta"><span class="user-name">张建国</span><span class="user-account">zhang</span></span></div></td>
+            <td><span class="tag tag-blue">食堂经理</span></td>
+            <td>西区餐厅</td>
+            <td class="num">13900000004</td>
+            <td class="num">2026-08-03 08:05</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">王</span><span class="user-meta"><span class="user-name">王海</span><span class="user-account">wang</span></span></div></td>
+            <td><span class="tag tag-blue">采购员</span></td>
+            <td>南苑食堂</td>
+            <td class="num">13900000005</td>
+            <td class="num">2026-08-03 08:40</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">刘</span><span class="user-meta"><span class="user-name">刘晨</span><span class="user-account">liu</span></span></div></td>
+            <td><span class="tag tag-blue">采购员</span></td>
+            <td>南苑食堂</td>
+            <td class="num">13900000006</td>
+            <td class="num">2026-08-03 07:50</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">李</span><span class="user-meta"><span class="user-name">李慧敏</span><span class="user-account">houqin</span></span></div></td>
+            <td><span class="tag tag-blue">后勤主任</span></td>
+            <td>后勤管理与服务中心</td>
+            <td class="num">13900000008</td>
+            <td class="num">2026-08-03 07:45</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+          <tr>
+            <td><div class="user-cell"><span class="avatar">赵</span><span class="user-meta"><span class="user-name">赵敏</span><span class="user-account">zhaomin</span></span></div></td>
+            <td><span class="tag tag-blue">采购员</span></td>
+            <td>西区餐厅</td>
+            <td class="num">13900000007</td>
+            <td class="num">2026-08-03 08:20</td>
+            <td><span class="dot-status dot-on">启用</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-foot">
+      <span class="modal-note">共 8 个账号</span>
+      <button class="btn btn-secondary-filter" type="button" data-action="close-accounts">关闭</button>
+    </div>
+  </div>
+</div>
 
 <script>
   (function(){
@@ -1080,6 +1250,7 @@
 
     var drawer = document.getElementById('drawer');
     var drawerMask = document.getElementById('drawerMask');
+    var acctMask = document.getElementById('acctMask');
 
     function tag(cls, text){
       return '<span class="tag ' + cls + '">' + text + '</span>';
@@ -1154,6 +1325,16 @@
       drawerMask.classList.remove('open');
     }
 
+    // 平台账户明细：仅平台管理侧可见（可见性见需求文档 3.2）
+    function openAccounts(){
+      if (ROLE === 'manager') return;
+      acctMask.classList.add('open');
+    }
+
+    function closeAccounts(){
+      acctMask.classList.remove('open');
+    }
+
     /* ---------- 食堂经理视角 ---------- */
     function applyRole(){
       if (ROLE !== 'manager') return;
@@ -1191,13 +1372,22 @@
       // 跳转类动作：地址与参数由对方系统提供（待确认清单第 13/14/15 项）
       var jump = e.target.closest('[data-action="jump"]');
       if (jump){ return; }
-      if (e.target.closest('[data-action="close"]') || e.target === drawerMask){
+      // 点击右上角账户 → 平台账户明细
+      if (e.target.closest('[data-action="open-accounts"]')){
+        openAccounts();
+        return;
+      }
+      if (e.target.closest('[data-action="close-drawer"]') || e.target === drawerMask){
         closeDrawer();
+        return;
+      }
+      if (e.target.closest('[data-action="close-accounts"]') || e.target === acctMask){
+        closeAccounts();
       }
     });
 
     document.addEventListener('keydown', function(e){
-      if (e.key === 'Escape'){ closeDrawer(); }
+      if (e.key === 'Escape'){ closeDrawer(); closeAccounts(); }
     });
 
     applyRole();
